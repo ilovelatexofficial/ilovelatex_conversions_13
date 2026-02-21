@@ -1,0 +1,1161 @@
+\documentclass[final,5p,times,twocolumn,authoryear]{elsarticle}
+\usepackage{amssymb}
+\usepackage{lipsum}
+\newcommand{\kms}{km\,s$^{-1}$}
+\newcommand{\msun}{$M_\odot}
+\journal{Informatics in Medicine Unlocked}
+\begin{document}
+\begin{frontmatter}
+\title{A systematic review on computer vision-based methods for cervical cancer detection}
+\author[aff1]{Judith Leo}
+\author[aff2]{Crispin Kahesa}
+\author[aff1]{Elizabeth Mkoba}
+\author[aff1]{Hope Mbelwa\corref{cor1}}
+\cortext[cor1]{Corresponding author}
+\ead{hopem@nm-aist.ac.tz}
+\affiliation[aff1]{organization={School of Computational and Communication Science and Engineering (CoCSE), The Nelson Mandela African Institution of Science and Technology (NM-AIST)},
+ addressline={},
+ city={Arusha},
+ postcode={23311},
+ state={},
+ country={Tanzania}}
+\affiliation[aff2]{organization={},
+ addressline={},
+ city={},
+ postcode={},
+ state={},
+ country={}}
+\begin{abstract}
+Cervical cancer is a leading cause of mortality among women globally, especially in regions where access to timely screening remains a challenge. With such concerns, accurate detection of cervical lesions is essential for effective diagnosis and treatment. This review aimed to explore the application of computer vision-based methods for detecting cervical cancer, identifying their potential, setbacks and areas for future development. A comprehensive literature search across Scopus, IEEE Xplore, PubMed, and Google Scholar identified 96 relevant studies published between 2014 and August 2025. These studies applied computer vision methods including CNNs, Vision Transformers, and multimodal models to cervical cancer detection using Pap smear, colposcopy, and histopathology images. They were analyzed based on the techniques employed, datasets used, evaluation metrics adopted, and reported results. This review highlights significant advancements in the field, particularly in lesion classification, precise segmentation of affected regions, and accurate detection of cancerous regions. However, some challenges were identified, including limited image datasets with insufficiently distributed normal and abnormal cases, aggravated by privacy issues and accurate labeling of medical images, which is critical and rigorous, often leading to annotation inconsistencies. Lastly, this study revealed that integrating Natural Language Processing and Computer Vision can enhance cervical cancer diagnosis through multi-modal models that combine both clinical text and imaging data. Additionally, this study proposes the use of techniques like annotation-efficient learning to manage limited labeled datasets using methods such as semi-supervised and transfer learning as well as the use of federated learning to ensure privacy in computer-aided diagnostic systems.
+\end{abstract}
+\begin{keyword}
+Cervical cancerClassificationComputer visionMedical imagingObject detectionPap smearSegmentation
+\end{keyword}
+\end{frontmatter}
+% ===== MAIN DOCUMENT CONTENT =====
+
+\section{Introduction}
+\subsection{Cervical cancer}
+The fourth most common malignancy among women is cervical cancer \cite{ref1}. In 2022, global cancer statistics reported that approximately 660,000 women were diagnosed with cervical cancer worldwide, resulting in about 350,000 fatalities related to the disease \cite{ref2}. This cancer affects the cervix, which is the bottom section of the uterus that connects to the vagina. It starts with the development of abnormal cells in the lining of the cervix and progresses slowly over time. If not treated, these aberrant cells may eventually develop into cancer \cite{ref3}. Key risk factors for cervical cancer include infection with high‑risk strains of the Human Papillomavirus (HPV), early sexual activity, multiple sexual partners, smoking, long‑term oral contraceptive use and compromised immunity \cite{ref4}. HPV infection is responsible for over 99\% of cervical cancer cases, with genotypes 16 and 18 conferring the highest risk. Global disparities exist both in the incidence of cervical cancer, which is over three times higher in low‑income regions, as well as in screening coverage and cancer survival rates \cite{ref5}. Frequent signs of cervical cancer include unusual vaginal bleeding, irregular intermenstrual bleeding, vaginal discomfort, pelvic pain, and increased odorous vaginal discharge. However, precancerous changes and early‑stage cervical cancers often exhibit no symptoms, which underscores the importance of regular screening \cite{ref6}.
+Cervical cancer screening requires testing women who may develop the disease, typically those between 29 and 70 years old, most of whom will be asymptomatic. In developing nations, the most widely utilized screening method is Visual Inspection with Acetic Acid (VIA). This technique involves visually examining the uterine cervix after applying a 3–5\% acetic acid solution. If the cervical epithelium contains an abnormal concentration of cellular proteins, the acetic acid causes these proteins to coagulate, resulting in an opaque white appearance of the affected area \cite{ref7}. The Papanicolaou Smear (Pap smear) test is another cytology‑based screening test that is considered the gold standard. Part of this pelvic examination technique involves taking cells from the cervix, staining them, and placing them on a glass slide. Subsequently, the cells are examined under a microscope and sorted according to their size, shape, texture and the nuclear‑to‑cytoplasm ratio \cite{ref8}.
+Human Papillomavirus (HPV) test is another screening method for high‑risk HPV strains that might cause cervical cancer. The World Health Organization (WHO) currently recommends testing for high‑risk HPV types as the primary screening method \cite{ref9}, ideally using self‑collected cervical‑vaginal swab samples to enable faster population screening. HPV is common and typically benign in the early stages of infection. In high‑resource settings, an additional triage test is used to further assess the risk of cervical pre‑cancer or cancer among HPV‑positive individuals. In lower‑resource settings, HPV screening is also recommended if feasible. A screen‑triage‑treat strategy is preferable to treating all HPV‑positive individuals when HPV prevalence is high and treatment options are limited \cite{ref10}. However, there is currently no triage test that is rapid, simple, cost‑effective and suitable for resource‑limited settings without requiring laboratory infrastructure. Additionally, most HPV infections clear up without intervention, so positive tests may lead to over‑diagnosis and overtreatment; hence HPV tests are frequently used along with Pap smear tests for optimal outcomes \cite{ref11}.
+\subsection{Computer vision}
+Computer Vision (CV) approaches refer to techniques which are focused on allowing machines to process and comprehend visual data, mirroring human visual perception. Formerly, computer vision algorithms relied on manually crafted features and rule‑based methods to extract valuable information from images \cite{ref11}. Computer vision‑based methods have practical advantages for cervical cancer screening. They facilitate early and robust diagnosis, as by spotting subtle patterns in medical images that human observers can miss. These methods reduce the required amount of time for a diagnosis, minimize inter‑observer variability and ease the burden on the clinician. They are particularly useful in low‑resource environments as they can be scaled up and potentially interfaced with mobile platforms. Moreover, computer vision systems also hold evident advantages in terms of cost‑effectiveness over the long term, uniform and objective analysis, and the potential of continued improvement as more data is made available, which will provide great convenience for the development of cervical cancer screening and diagnosis.
+
+\section{Introduction}
+Computer Vision (CV) approaches refer to techniques which are focused on allowing machines to process and comprehend visual data, mirroring human visual perception. Formerly, computer vision algorithms relied on manually crafted features and rule‑based methods to extract valuable information from images \cite{ref11}. Computer vision‑based methods have practical advantages for cervical cancer screening. They facilitate early and robust diagnosis by spotting subtle patterns in medical images that human observers can miss. These methods reduce the required amount of time for a diagnosis, minimize inter‑observer variability and ease the burden on the clinician. They are particularly useful in low‑resource environments as they can be scaled up and potentially interfaced with mobile platforms. Moreover, computer vision systems also hold evident advantages in terms of cost‑effectiveness over the long term, uniform and objective analysis, and the potential of continued improvement as more data become available, which will provide great convenience for the development of cervical cancer screening and diagnosis.
+Additionally, the application of computer vision in disease detection is transforming the way diseases are identified and managed. By leveraging advanced algorithms, these systems can thoroughly analyze large volumes of images and detect disease symptoms that were previously unrecognized \cite{ref12}. Unlike traditional methods that depend on manual inspection, automated computer vision systems are fast and efficient, processing images quickly and reducing the burden on healthcare providers. Computer vision and deep learning are interrelated fields that significantly enhance the functionality of computer vision systems. To develop a deep learning‑based computer vision system for disease diagnosis, a large dataset is required to train the model efficiently. The typical process for building such a system includes data collection, preprocessing, model training and model evaluation. Computer vision has made substantial progress over the past decade, shifting from rule‑based techniques to deep learning‑based approaches \cite{ref13}. This transformation has been motivated by the accessibility of open datasets and enhanced computing power, both of which have unlocked powerful new capabilities in machine learning. These advancements, particularly the adoption of computer vision methods, have paved the way for innovative applications and research opportunities, including in disease detection.
+\subsection{Problem statement}
+The type of cancer examined in this study is among the most common and deadly cancers in women. It exhibits a significant mortality rate and is typically diagnosed in later stages, although research indicates that early detection can significantly reduce mortality and improve patient survival rates \cite{ref14}. The interest in utilizing Artificial Intelligence (AI) for cervical cancer screening in the healthcare system is closely associated with the practical problems that common low‑resource medical centers currently face, e.g., shortage of trained medical professionals and equipment \cite{ref15}. Previous studies have explored various methods for detecting and diagnosing cervical cancer to address the challenges in this area. Computer vision has recently been employed to minimize the need for labor‑intensive, subjective and time‑consuming manual cervix observation, as well as microscopic examination of cervical cytology smears that require high levels of cytotechnologist expertise.
+\subsection{List of contributions}
+Earlier surveys covered only one aspect of computer vision for cervical cancer detection, for example, focusing solely on segmentation, classification, or a specific data type such as cytology slides. In this work, we take a broader perspective by reviewing computer vision methods across different data sources and a wide range of techniques, providing a more complete representation of how these approaches contribute to cervical cancer detection and a suggestion for future directions.
+\begin{itemize}
+\item A detailed review of computer vision methods used for cervical cancer detection, highlighting both state‑of‑the‑art techniques and recent advances.
+\item A discussion of the main challenges and gaps hindering the application of computer vision‑based methods in cervical cancer detection.
+\end{itemize}
+\subsection{Organization of the article}
+An extensive methodology of the review process is presented in Section~2. Section~3 gives an overview of the image datasets used in cervical cancer detection. It is followed by a review of the performance evaluation metrics in Section~4. Sections~5 and~6 provide results for the research questions. Sections~7 and~8 provide a discussion and outline future directions, respectively. Lastly, Section~9 concludes the article.
+\section{Research methodology}
+This work used a qualitative research method where data were collected using document review. The systematic review searched papers published between 2014 and August 2025 from the Scopus, IEEE Xplore, PubMed and Google Scholar databases. These databases were chosen based on the research objectives and research questions. The Preferred Reporting Items for Systematic Reviews and Meta‑Analysis Protocol (PRISMA) guidelines were adopted as the review methodology \cite{ref16}.
+\subsection{Research questions}
+The study aimed to investigate the following questions.
+\begin{itemize}
+\item \textbf{RQ1}: Which computer vision methods have been used for cervical cancer detection, and how well do they perform in terms of effectiveness and clinical applicability?
+\item \textbf{RQ2}: What challenges and gaps hinder the implementation of these methods into real‑world clinical practice?
+\end{itemize}
+
+Research Questions: RQ1: Which computer vision methods have been used for cervical cancer detection, and how well do they perform in terms of effectiveness and clinical applicability? RQ2: What challenges and gaps hinder the implementation of these methods into real‑world clinical practice?
+\subsection{Search strategy}
+The search string was created from the research questions to define the search scope of studies from the databases. The search string included the following keywords:
+\begin{quote}
+((“Cervical Cancer” OR “cervical cancer”) AND (“Detection” OR “detection” OR “Diagnosis” OR “diagnosis”) AND (“Computer Vision” OR “computer vision”))
+\end{quote}
+\subsection{Study selection criteria}
+The inclusion and exclusion criteria were used to reduce the number of studies by selecting the ones focusing on the purpose of the study.
+\subsubsection{Inclusion criteria}
+\begin{itemize}
+\item Papers that use computer vision to segment, detect and/or classify images for cervical cancer detection.
+\item Studies performed on humans.
+\item Abstract/Title/Full text: relevance to research questions.
+\item Date of publication: 2014–August 2025.
+\item Subject area: Computer Science.
+\item Language: papers written in English.
+\item Document types: conference papers, journal articles and reviews.
+\item Publication stage: final.
+\item Geographic location: worldwide.
+\end{itemize}
+\subsubsection{Exclusion criteria}
+\begin{itemize}
+\item Papers that do not use computer vision techniques to detect cervical cancer.
+\item Short papers, letters to editors, abstracts and expanded abstracts.
+\item Articles that were not completely available on the database.
+\item Papers not written in English.
+\end{itemize}
+\subsection{Screening}
+% Content for screening would be placed here.
+
+\section{Screening}
+The screening of papers was conducted through an online search using Scopus, IEEE Xplore, PubMed and Google Scholar databases, applying both search strings and exclusion criteria. After removing the duplicates, 308 papers remained. Following the title and abstract screening, the number of papers was reduced to 162. Finally, 96 papers remained after full-text screening.
+\section{Eligibility}
+All 162 full-text papers were closely examined to determine eligi-bility for inclusion. After the full-text review, 66 studies were excluded for numerous reasons including mainly lack of relevance, study design, insufficient data or methodology inconsistencies and duplication. Through these exclusions, only high-quality, relevant studies were included for analysis. PRISMA flow diagram as shown in Fig.~\ref{fig:prisma} presents a flow chart to visualize the process of selecting studies for a systematic review. It provides transparency and clarity in how studies were iden-tified, screened, and either included or excluded throughout the review process.
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.8\linewidth]{images/figure1.png}
+\caption{PRISMA Flow diagram for the studies selection process.}
+\label{fig:prisma}
+\end{figure}
+\section{Quality assessment criteria}
+The quality of each included study was evaluated using a structured checklist adapted from established guidelines (PRISMA) for computer vision and medical imaging research. The checklist considered several key aspects: clarity of the study objectives, adequacy and transparency in the used datasets, appropriateness of the computer vision methods 
+Fig.~\ref{fig:prisma} used, use of suitable evaluation metrics, and completeness of the re-ported results. Two reviewers independently assessed all studies using these criteria. Any differences in judgment were discussed, and final decisions were reached by consensus.
+\section{Data extraction}
+The information extracted from the articles that were included was carefully examined. Computer vision techniques for cervical cancer detection were investigated for every study. The analysis concentrated on the kind and source of data used, the methods used and the evalua-tion metrics applied. Furthermore, studies’ effectiveness was assessed, the results’ reported accuracy, main findings and any possible limita-tions of the study. This thorough methodology helps identify key find-ings, limitations and potential gaps in the current literature. Future studies in the topic can then be informed and guided by the analysis’s findings.
+\section{Data analysis}
+The studies acquired were classified and examined according to several key aspects, including type of data used, computer vision methodologies applied and performance metrics. The analysis also considered the strengths and limitations of the proposed methods.
+\section{Bibliometric analysis}
+\subsection{Descriptive bibliometric analysis}
+Descriptive analyses focused on identifying scientific research trends, such as the number of publications over time and distribution of papers across journals. Fig.~\ref{fig:pubtrend} provides an in-depth analysis of the number of published articles on cervical cancer detection and computer vision based methods, using data sourced from the databases.
+This analysis identifies a substantial growth in papers which explored cervical cancer detection via computer vision throughout a period of 10 years. In the years of 2014–2016, there was not much ac-tivity in this research with only one paper in 2016. From 2017 to 2019, the number of research papers started to increase steadily because re-searchers stated they were becoming comfortable with image-based techniques. The increase in studies was from 2020 onward, with the year 2022 having the largest publication number with a total of 22 pa-pers. From 2020 to 2022, CNNs represented about 65\% of results, which demonstrates their effectiveness on cytology and histology images. In the years of 2023–2025, computer vision research remains high, but
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.8\linewidth]{images/figure2.png}
+\caption{Number of published articles on cervical cancer detection and computer vision based methods.}
+\label{fig:pubtrend}
+\end{figure}
+
+The intellectual structure and trajectory of computer‑vision research related to cervical cancer detection can be visualized through three thematic clusters. The green cluster orients toward methodological themes such as deep learning, Convolutional Neural Networks, feature extraction, and image classification, illustrating how CNNs emerged as a standard baseline method. The blue cluster maps to more cytology‑specific terms including Pap smear, cells, diagnostic accuracy, and cervical cytology, indicating the technical focus on image‑based analyses to support screening and diagnosis. The red cluster aligns with more general clinical and biological themes: human, pathology, genetics, and Human Papillomavirus, showing how the computer‑vision literature situates itself within the relevant medical and public‑health landscape. External terms like explainability, risk factors, and screening suggest developing priorities of trust and clinical acceptance. Altogether these themes reveal a trajectory from algorithm‑based studies to applications‑based research, with explainability, multimodal integration, and clinical relevance becoming prominent.
+\section{Datasets}
+For precise and accurate validation that leads to effective classification accuracy, computer‑aided diagnosis needs a significant volume of labeled image data. In this review we identified that image datasets serve as the foundation of the developed models for cervical cancer detection as summarized in Table~\ref{tab:datasets}. Publicly available image datasets for cervical cancer detection include:
+SIPaKMeD database~\cite{ref17} has 4049 single pictures of cervical cells collected using OLYMPUS BX53F optical microscope with a CCD camera. Cytopathologists annotated the cells into five discrete groups depending on their morphological features and cytological appearance: superficial‑intermediate, parabasal, koilocytotic, dyskeratotic, and metaplastic cells. In this division, superficial‑intermediate and ...
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.8\linewidth]{images/figure3.png}
+\caption{Publication trend of research on Computer Vision methods for cervical cancer detection (2014--August, 2025).}
+\label{fig:trend}
+\end{figure}
+There is evidence of more diversification in the choice of models used to solve the detection of cervical cancer problem. For example, Vision Transformers and multimodal fusion models account for roughly 20--25 \% of studies published in the last three years. Research approaches that apply Vision Transformers suggest a growing trend to abandon CNNs for a more complete global context and multimodal‑based advanced architecture that can better leverage a full global context along with the ability to integrate multimodal data.
+\subsubsection{Scientific mapping bibliometric analyses}
+Scientific mapping in bibliometric analysis was used to visualize and analyze the structure, development, and trends of scientific research within a specific field. It provides a graphical representation of the relationships between key knowledge and publications as shown in Fig.~\ref{fig:thematic}. The keyword co‑occurrence map presents thematic clusters which ...
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.8\linewidth]{images/figure4.png}
+\caption{Thematic map of keyword co‑occurrence in computer vision research for cervical cancer detection.}
+\label{fig:thematic}
+\end{figure}
+\begin{table}
+\centering
+\caption{Summary and categorization of public cervical cancer image datasets.}
+\label{tab:datasets}
+\begin{tabular}{lll}
+\hline
+Reference & Dataset & Description \\
+\hline
+% Data rows to be inserted here
+\hline
+\end{tabular}
+\end{table}
+
+\section{Datasets}
+\subsection{Mendeley LBC dataset}
+Mendeley LBC dataset \cite{ref18} is the result of a collaborative effort among Babina Diagnostic Pvt. Ltd in Imphal, along with Gauhati Medical College and Hospital and Dr.~B.~Barooah Cancer Institute in Guwahati. This database encompasses 963 Liquid-Based Cytology (LBC) images, all taken at 400\(\times\) magnification (combining a 40\(\times\) objective lens with a 10\(\times\) eyepiece) using a Leica ICC50 HD microscope. Each high‑resolution image maintains dimensions of 2048\(\times\)1536 pixels. The dataset is categorized into four distinct groups: Negative for Intra‑epithelial Lesion or Malignancy (NILM) with 613 samples, Low‑Grade Squamous Intraepithelial Lesion (LSIL) containing 163 images, High‑Grade Squamous Intraepithelial Lesion (HSIL) comprising 113 samples and Squamous Cell Carcinoma (SCC) representing 74 cases.
+\subsection{Herlev dataset}
+Herlev dataset \cite{ref6} contains 917 Papanicolaou smear images. Following the 3‑tier dysplasia classification system, these images are organized into seven distinct categories, comprising three normal and four abnormal classes. The dataset was developed at Herlev University Hospital in Denmark, where images were captured using a specialized microscope connected to a frame grabber, achieving a precise resolution of 0.201~\(\mu\)m/pixel. Each cellular image in the collection has undergone manual segmentation, separating it into three key components: background, cytoplasm, and nucleus.
+\subsection{CRIC dataset}
+CRIC dataset \cite{ref19} comprises 400 conventional cervical Pap smear images containing 11,534 classified cells, gathered from 118 female patients in the Southeast region of Brazil. The samples were processed and examined at the Cytology Laboratory of the Pharmacy School at the Federal University of Ouro Preto, Minas Gerais, Brazil. Image acquisition was performed using a Zeiss AxioImager equipped with a Zeiss AxionCam MRc digital camera, employing conventional bright‑field microscopy with a combined 40\(\times\) objective and 10\(\times\) eyepiece magnification. Each image maintains dimensions of 1376\(\times\)1020 pixels with a resolution of 0.228~\(\mu\)m/pixel. Following the Bethesda System (TBS) nomenclature, the dataset categorizes cells into six classifications: NILM (6779 cells), Atypical Squamous Cells of Undetermined Significance (ASC‑US) (606 cells), LSIL (1360 cells), ASC‑H (925 cells), HSIL (1703 cells), and SCC (161 cells).
+\subsection{ISBI 2014 dataset}
+ISBI 2014 dataset \cite{ref20} contains two distinct image sets: 16 Extended Depth Field (EDF) cervical cytology images and 945 synthetic images. Each image features about 20–60 Papanicolaou‑stained cervical cells with varying degrees of overlap. The images were captured using an Olympus BX40 microscope equipped with a 40\(\times\) objective lens and a four‑megapixel SPOT Insight camera, achieving a high‑resolution output of approximately 0.185~\(\mu\)m/pixel.
+\subsection{Intel \& MobileODT dataset}
+Intel \& MobileODT dataset \cite{ref21} is offered by Kaggle. The collection includes 6734 labeled pictures of cervical cancer in three stages: type 1 Cervical Intraepithelial Neoplasia 1 (CIN1), type 2 (CIN2), and type 3 (CIN3) cells.
+\subsection{HiCervix dataset}
+HiCervix dataset \cite{ref22} is the largest publicly available hierarchical cervical cytology dataset developed to support progress in automated analysis for cervical cancer detection. It contains 40,229 annotated cervical cell and cluster images from 4,496 whole‑slide images, organized into 29 categories within a three‑level hierarchy that captures both broad and fine‑grained cellular subtypes. The data, collected between 2019 and 2022 from several clinical centers, was meticulously curated and independently annotated by expert cytopathologists to ensure accuracy and consistency. By offering a large‑scale, fine‑grained, and hierarchically structured resource, HiCervix helps overcome key limitations of previous cytology datasets and provides a strong benchmark for advancing deep learning methods in cervical cancer screening and diagnosis.
+\subsection{TissueNet dataset}
+TissueNet dataset \cite{ref23} is a large, multi‑center collection of 1,015 cervical whole‑slide images, created for the TissueNet: Detect Lesions in Cervical Biopsies challenge. The slides were gathered from 18 medical centers across France and carefully annotated by experienced pathologists at the slide level. Each case is categorized into one of four diagnostic groups that reflect lesion severity: benign (270 slides), LSIL (288), HSIL (238), and SCC (219).
+\section{Performance evaluation metrics}
+Performance evaluation metrics are based on probability estimates between 0 and 1 \cite{ref25}. A model’s performance cannot be reliably assessed by a single metric; multiple metrics are advised for a thorough knowledge of a model’s performance and applicability in real‑world scenarios. Accuracy is one of the most important metrics that gives an overall success rate, showing the percentage of data classified correctly out of the total number of instances \cite{ref2}. Precision provides a strong focus, counting the fraction of true positive predictions from all positive predictions, highlighting the model’s effectiveness in suppressing false positives \cite{ref26}. Recall, also recognized as sensitivity, measures the model’s capability of detecting all true positive instances and is especially important in early cancer detection as missing positives can be detrimental \cite{ref27}. Specificity is the ratio of true negative predictions to the sum of true negatives and false positives, indicating the model’s capability to reduce false positives and make a reliable diagnosis. The F1 score averages precision and recall, providing a balanced evaluation of the model’s performance that is particularly useful when the classes are imbalanced \cite{ref28,ref29}. Table 2 summarizes the frequently applied evaluation metrics calculation formulas.
+
+\section{Computer vision based methods for cervical cancer detection}
+Accuracy is one of the most important metrics that gives an overall success rate which shows what the percentage of data was classified correctly out of the total number of instances [2]. But precision also provides a strong focus, counting the fraction of true positive predictions from all positive prediction, which highlights the model’s effectiveness in suppressing false positives [26]. Furthermore, recall, also recognized as sensitivity, measures the model’s capability of detecting all true positive instances and is especially important in early cancer detection as missing positives can be detrimental [27]. On the other hand, specificity is the ratio of true negative predictions to the sum of the true negatives and false positives as an indicator of the model’s capability to reduce false positive and make a reliable diagnosis. The F1 score averages precision and recall, which provides a balanced evaluation of the model’s performance that is particularly useful when the classes are imbalanced [28,29]. Table~\ref{tab:performance-metrics} summarizes the frequently applied evaluation metrics calculation formulas.
+These are the results for RQ1: Which computer vision methods have been used for cervical cancer detection, and how well do they perform in terms of effectiveness and clinical applicability?
+\subsection{Classification techniques}
+One of the main areas of study in medical image analysis is image classification tasks [11]. These tasks can either be supervised (known labeled data points) or self‑supervised whereby the model learns useful visual representations from unlabeled images without needing manual annotations [30,31]. The classification of cervical cancer is a step‑by‑step procedure that starts with taking medical images. This preliminary phase of image collection is succeeded by data preparation as well as the extraction of important features from the gathered images. In fact, the sources from which researchers usually get such images are two: publicly available medical databases, which is the major portion of the data in the research, and private databases received through the collaborations with hospitals and other research institutions. This initial stage of data collection serves as the main step for the classification process [32].
+Image pre‑processing represents the second phase in the classification workflow [12]. This stage involves various enhancement techniques, removal, data augmentation, and image rotation/flipping. Images that are noisy, blurry or lack sufficient contrast often require these enhancement procedures. However, in the context of laboratory‑captured Pap smear images, these image quality issues are less common due to controlled imaging conditions [21].
+\begin{table}
+\centering
+\caption{Performance evaluation metrics of computer vision techniques}
+\label{tab:performance-metrics}
+\begin{tabular}{ll}
+\hline
+Evaluation Metric & Formula \\
+\hline
+Accuracy & $\frac{TP + TN}{TP + TN + FP + FN}$ \\
+Specificity & $\frac{TN}{TN + FP}$ \\
+Precision & $\frac{TP}{TP + FP}$ \\
+Recall (Sensitivity) & $\frac{TP}{TP + FN}$ \\
+F1 Score & $2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}$ \\
+AUROC & $TPR = \frac{TP}{TP + FN},\; TNR = \frac{TN}{TN + FP}$ \\
+ZSI & $\frac{2TP}{2TP + FP + FN}$ \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Classification techniques}
+Image pre-processing represents the second phase in the classification workflow. This stage involves various enhancement techniques, removal, data augmentation, and image rotation/flipping. Images that are noisy, blurry or lack sufficient contrast often require these enhancement procedures. However, in the context of laboratory‑captured Pap smear images, these image quality issues are less common due to controlled imaging conditions.
+Feature extraction and selection emerges as the critical stage that significantly influences classification accuracy. This stage is important in minimizing misclassification in CV techniques. Authors select feature sets to match the problems they address. The commonly used features in the literature are summarized in Table~\ref{tab:features}; these include texture, morphological, color, computer‑simulated, geometric, shape, structural and deep features. To reduce computational cost and redundancy, most researchers employed feature selection based on the extracted features. A popular feature selection technique is the use of deep features, as evidenced by the number of articles in this review that employ CV‑based methods. While traditional image processing included mostly manual and expert‑based feature extraction pipelines, with CV models features can be extracted automatically from images. Cervical cancer images can be analyzed with automated feature extraction techniques; these features can be used with classifiers or even with another CNN architecture for classification tasks.
+The final stage involves feeding the extracted feature vectors into various classification systems. The predominant classifiers employed in this phase include Support Vector Machines, decision trees, deep Artificial Neural Networks, fully connected layers, transfer learning models and softmax regression algorithms. Some research approaches take an alternative path by prioritizing segmentation before classification, where they first isolate and extract specific features from the image, then proceed with the classification process. The most reviewed papers employed Transfer Learning, supervised learning, ensemble methods, and hybrid feature vision methods as seen in Table~\ref{tab:methods}.
+We clearly observe from the table that CNNs and their variants remain the most frequent approaches to detecting cervical cancer. Their frequency is likely because they have already proven to be able to learn local image features and are resilient enough to operate with relatively small medical datasets such as Herlev and SIPaKMeD. Recently, however, we observe a trend towards higher‑level architectures, including vision ensemble models, and weakly supervised methods, signaling a drive towards improving model generalizability and mitigating data limitations. Herlev continues to be the most widely used benchmark across datasets, though private and multi‑center datasets are increasingly being included in an effort to assess robustness. Overall, most methods provide high performance, often more than 95\% accuracy, but variability is influenced by class number, dataset size, and methodological variation. The implications of these trends are that while CNN‑based methods remain solid baselines, the trend is moving gradually towards increasingly sophisticated models capable of better handling the sensitivity of cytology images and providing clinical acceptability.
+\begin{table}
+\centering
+\caption{Summary of feature extracted from Pap smear images}
+\label{tab:features}
+\begin{tabular}{|l|p{10cm}|}
+\hline
+\textbf{Selected feature} & \textbf{Description} \\
+\hline
+Nucleus & Area, brightness, ratio, shortest and diameter, roundness, smoothness, perimeter, position, nucleus maxima and minima \\
+\hline
+Cytoplasm & Area, ratio, brightness, shortest and longest diameter, elongation, roundness, perimeter, maxima and minima \\
+\hline
+Deep features & \\
+\hline
+\end{tabular}
+\end{table}
+\subsection{Segmentation techniques}
+Despite the widespread application of Deep Learning (DL)‑based classification techniques for cervical cell identification, which do not require precise segmentation of cervical cell contours, the segmentation of cell regions remains fundamental for conducting quantitative cell analysis (including shape, size and texture). Segmentation is a method that splits an image into multiple segments to simplify analysis and detect objects of interest. In cervical cancer detection, segmentation techniques can be applied to cell regions (separating individual cells in cervical cytology screening) and overlapping cells, where individual cells that overlap in a cervical cytology image are separated into nucleus and cytoplasm, columnar area and acetowhite lesions. This helps avoid incorrect diagnoses that could arise from relying solely on the segmentation of the whole slide image.
+This sub‑section presents some computer‑vision‑based approaches to cervical cancer early diagnosis using segmentation methods. The best performance models are the Mask R‑CNN and the U‑Net because of their strength in class imbalance processing, high‑resolution inputs and detailed and accurate boundary delineation that is important for early and reliable detection of cervical abnormalities. U‑Net follows an encoder‑decoder architecture for end‑to‑end semantic segmentation. The decoder generates a pixel‑level segmentation map from up‑sampling and concatenation operations, while the encoder extracts high‑level features from the input image through a series of convolutional layers. Skip connections are also used in the architecture to combine low‑level and high‑level features. The encoder‑decoder framework with skip connections enables preservation of detailed spatial information while accessing deep contextual features, which makes it effective for segmenting small or irregular structures of cervical cells.
+Table~\ref{tab:segmentation} summarizes the computer vision techniques applied to cervical cancer detection using segmentation approaches, detailing key attributes from the reviewed studies, including the publication year, references, classification methods, datasets, and results. Each row corresponds to a specific study.
+\begin{table}
+\centering
+\caption{Computer vision techniques for cervical cancer detection using segmentation approaches}
+\label{tab:segmentation}
+\begin{tabular}{|l|l|l|l|l|}
+\hline
+\textbf{Year} & \textbf{Reference} & \textbf{Method} & \textbf{Dataset} & \textbf{Result} \\
+\hline
+% Data omitted as not provided in source text \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}
+\centering
+\caption{Summary of approaches for cervical cancer classification, including algorithms and evaluation metrics.}
+\label{tab:summary}
+\begin{tabular}{lll}
+\hline
+Year & Reference & Method \\
+\hline
+2017 & \cite{ref42} & DCNN \\
+2018 & \cite{ref43,ref37,ref44,ref45,ref46,ref47,ref48,ref49} & CNN Hierarchical Decision Approach, Deep learning CNN, Hybrid transfer learning, Deep Learning Graphical Convolutional Network, CNN, LSTM \\
+2019 & \cite{ref50,ref19} & Class problem \\
+2020 & & \\
+2021 & & \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Data}
+7 class
+7 class7 class7 class2 class2 class4 class4 class4 class
+\begin{table}
+\centering
+\caption{}
+\label{}
+\begin{tabular}{l}
+\hline
+Herlev dataset (917 images), Private dataset (989 images)Herlev dataset (917 images)Herlev dataset (917 images)Herlev dataset (917 images), Private datasetHerlev dataset (917 images)Private dataset (2198 images)Private datasetPrivate dataset (7668 images)Private dataset (4753 images) \\
+\hline
+\end{tabular}
+\end{table}
+\section{Results}
+DCNNKNN, Decision Tree, Random Forest \& Ridge
+2 class2 and 3 class
+Private datasetHerlev dataset (917 images) \& CRIC dataset (400 images)
+2021 \cite{51}
+Deep Learning
+4 class
+Herlev dataset (917 images) \cite{52}
+2021
+Graph Convolutional Network
+3 class
+SIPaKMeD dataset (4049 images)
+
+SIPaKMeD dataset (4049 images) \cite{ref53,ref54}
+Weakly Supervised Learning CNN (2021) \cite{ref36}
+Transfer learning, deep feature extraction (2021) \cite{ref55}
+Ensemble (2021) \cite{ref56,ref39,ref57}
+\cite{ref58} (2022)
+\cite{ref59} (2022)
+Multiple instance learning Residual Neural Networks CNN
+Inception V3, MobileNet V2 \& Inception ResNet V2 ViT – CNN ensemble, LSTM
+
+\begin{table}
+\centering
+\caption{Summary of methods and datasets}
+\label{tab:summary}
+\begin{tabular}{llll}
+\hline
+L & S & T & M \\
+\hline
+Inception V3, MobileNet V2 & Inception ResNet V2ViT – CNN ensemble, LSTM & 2022 & \cite{ref60} \\
+Improved Fuzzy Deep Learning & & 2022 & \cite{ref61} \\
+Deep Neural Network & & 2022 & \cite{ref62}, \cite{ref63} \\
+DCNNFuzzy C-means, PCA & 2 class4, 7 and 5 class & & \\
+ & 5 and 4 class6 class & & \\
+ & 2 class4 class7 and 4 class5 class & & \\
+ & Herlev dataset (917 images), Mendeley LBC dataset (963 images), SIPaKMeD dataset (4049 images), CRIC dataset (3233 images) & & \\
+ & Private dataset (1331 images), Herlev dataset (844 images) & & \\
+ & SIPaKMeD dataset (4049 images) & & \\
+ & 5 class & & \\
+ & SIPaKMeD dataset (4049 images) & & \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Object detection techniques}
+Object detection goes beyond simply classifying an image; it also predicts the coordinates of bounding boxes around each detected object, enabling the model to locate multiple objects within a scene \cite{ref80}. In medical imaging, object detection is applied to identify and locate specific anatomical structures, lesions or abnormalities within images such as X‑rays, CT scans, Magnetic Resonance Imaging and histopathology slides. In the case of cervical cancer screening in particular, object detection can be used to identify and quantify specific types of cells and abnormalities in images of the cervix, such as those obtained from Pap.
+From the reviewed studies in cervical cancer imaging, segmentation and detection are two key computer vision tasks, each facing its own set of challenges. Recognizing these difficulties is important for making sense of reported results and for understanding how well these methods can be used in real clinical settings. Table 6 outlines the main challenges linked to segmentation and detection, showing where these approaches often struggle.
+SIPaKMeD dataset (4049 images)
+2 and 7 class5 class
+5 class2 class
+Herlev dataset (917 images)
+Herlev dataset (917 images) \& SIPaKMeD dataset (4049 images) Private dataset (6996 images) Herlev dataset (565 images)
+2023
+VGG16, ResNet50, InceptionV3, InceptionResNetV2 \& ConvNeXtXLarge
+5 class
+Cervix‑Type dataset (1481 images)
+Acc = 98.3 \%, AUC = 99 \% \& Sp = 98.3 \%
+Acc = 99 \%, Sn = 98.04 \% \& Sp = 98.00 \% Acc = 87.02 \% Acc = 94.1 \% Acc = 91.2 \% Acc = 91.46 \% Acc = 88.8 \%, Sn = 92 \% \& Sp = 83 \% Acc = 79.07 \%, P = 72.62 \%, R = 85.45 \% Acc = 96.13 \%, Sp = 98.22 \% \& Sn = 95.09 \% Acc = 81.35 \% Herlev: Acc = 98.42 \%, Sp = 98.42, P =98.43 \%,R = 98.41 \% \& F1 = 8.42 \% CRIC: Acc = 96.86 \%, Sp = 97.64 \%, P =96.35 \%, R = 96.33 \% \& F1 = 96.33 \% Acc = 98.38 \%,Sp = 98.5 \%, Sn = 98.83 \%, P = 98.5 \%, R = 99.3 \% \& R = 98.25 \% Acc = 98.37 \%, Sn = 99.80 \%, Sp = 99.60 \% \& F score = 99.80 \% Acc = 95.2 \%, Sn = 99.5 \% Mendley LBC: Acc = 99.47 \%, Herlev: Acc = 98.32 \%, SIPaKMeD: Acc = 97.87 \%
+SIPaKMeD: Acc = 98.26 \% Mendeley LBC: Acc = 99.47 \% Acc = 96 \%, Sp = 96 \%, P = 96 \%, R = 96 \%, F1 = 96 \% Acc = 84.55 \% Average PDI = 99 \% 7 class: Acc = 75.6 \%, 4 class: Acc = 81.3 \% Acc = 96.96 \%, P = 96.51 \%, R = 96.53 \%, F1 = 96.45 \% Ensemble: Acc = 97.65 \% LSTM: Acc = 95.80 \% Acc = 98.51 \%, Sp = 98.80 \%, Sn = 98.45 \% \& AUC = 99.95 \% Acc = 95.62 \%, P = 95.68 \%, R = 95.64 \% \& F1 = 95.63 \% Acc = 81.23 \% \& 81.38 \% Acc = 94.86 \%, Sn = 97.61 \%, Sp = 83.65 \%, P = 96.31 \% \& F1 = 96.87 \% Acc = 97.97 \%
+Deep Convolutional Neural Network (DCNN), Convolutional Neural Network (CNN), Long Short Term Memory (LSTM), Vision Transformer (ViT), Modified Uniform Local Ternary Patterns (MULTP), Principal Component Analysis (PCA), Accuracy (Acc), Precision (P), Recall (R), Sensitivity (Sn), Specificity (Sp), Area under the Curve (AUC), F1 Measure (F1).
+toward representation robustness with generalizability.
+
+Object detection goes beyond simply classifying an image; it also predicts the coordinates of bounding boxes around each detected object, enabling the model to locate multiple objects within a scene \cite{ref80}. In medical imaging, object detection is applied to identify and locate specific anatomical structures, lesions or abnormalities within images such as X‑rays, CT scans, Magnetic Resonance Imaging and histopathology slides. In the case of cervical cancer screening in particular, object detection can be used to identify and quantify specific types of cells and abnormalities in images of the cervix, such as those obtained from Pap smears or colposcopy \cite{ref81}. By locating cells or groups of cells with precancerous and cancerous changes, this approach enables pathologists to spot signs of cervical cancer earlier. For example, object identification algorithms can be trained to distinguish between healthy and abnormal cells, which may suggest dysplasia (abnormal cell growth) or other early symptoms of cancer \cite{ref82}.
+By registering and marking the nucleus and cytoplasm of cells, the model aids in identifying anomalous patterns of size, shape, or density in the Pap smear screening associated with potential malignancies \cite{ref83}. Moreover, abnormal texture or color alterations in cervical tissue that are commonly indicative of precancerous lesions could be highlighted by object detection during colposcopy \cite{ref84}.
+From the reviewed studies, popular used object detection models are Faster R‑CNN, YOLO and SSD. The high accuracy of Faster R‑CNN is attained by introducing the Region Proposal Network (RPN) which produces candidate object regions and creates an excellent approach to detecting small and irregular cervical cell structures accurately \cite{ref6,ref88}. On the other hand, YOLO provides feedback for real‑time detection and is a trade‑off between speed and accurateness, thus it is useful in clinical environments that require fast checking \cite{ref6}. SSD also performs
+\begin{table}[htbp]
+\centering
+\caption{Segmentation methods applied to cervical images for precancerous and cancerous lesion detection.}
+\label{tab:segmentation}
+\begin{tabular}{llllll}
+\hline
+Year & Reference & Method & Segmented region & Data & Results \\
+\hline
+2016 & \cite{ref68} & Multi‑scale algorithm & Nucleus & & \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}
+\centering
+\caption{Summary of methods}
+\label{tab:summary}
+\begin{tabular}{|l|l|l|l|}
+\hline
+Method & Target & Year & Reference \\
+\hline
+Nucleus & Private dataset & 2017 & [24] \\
+\hline
+Multi-scale CNN & Nucleus and cytoplasm & 2017 & [69] \\
+\hline
+Automatic AW region segmentation algorithm & & 2018 & [70] \\
+\hline
+DL & & 2019 & [20] \\
+\hline
+DCNN & Acetowhite (AW) regionNucleus; Overlapping cell regions; ISBI 2015 dataset, Shenzhen University (SZU) dataset & & \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}
+\centering
+\caption{Summary of datasets, years, references, and methods}
+\label{tab:summary}
+\begin{tabular}{llll}
+\hline
+Dataset & Year & Reference & Method \\
+\hline
+ISBI 2015 dataset, Shenzhen University (SZU) dataset & & & \\
+Private dataset & & & \\
+Private dataset (133 images) & & & \\
+ISBI2014 dataset (945 images), ISBI2015 dataset (210 images) \& Private dataset & & & \\
+Private dataset (354 images) (Cervical cancer region) & 2019 & \cite{ref71} & Fuzzy logic \\
+ & 2019--2020 & \cite{ref72}, \cite{ref66} & Mask R-CNN, MACD R-CNN \\
+ & 2021 & \cite{ref73} & Generative Adversarial Networks \\
+ & 2022 & \cite{ref74} & Light weight Feature Attention Network (LFANet) \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}
+\centering
+\caption{Summary of methods, targets, datasets, and years}
+\label{tab:summary}
+\begin{tabular}{p{4.5cm} p{4.5cm} p{4.5cm} p{2cm}}
+\hline
+Method & Target & Dataset & Year \\
+\hline
+Light weight Feature Attention Network (LFANet) & Overlapping cellNucleus & Herlev dataset (917 images) & 2022 \\
+\hline
+Single and overlapping cellNucleus and cytoplasm & & Herlev dataset (917 images) & \\
+\hline
+Multi-task Convolutional Neural Network & Nucleus & Private dataset (489 images) & 2022 \\
+\hline
+Mask-RCNN & & & 2023 \\
+\hline
+Advance Map-based Superpixel Segmentation Algorithm (AMBSS) & Columnar Area (CA) and acetowhite (AW) lesions Nucleus & Private dataset & \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}
+\centering
+\caption{Summary of datasets, methods, and targets}
+\label{tab:summary}
+\begin{tabular}{p{3cm} p{1.5cm} p{1.5cm} p{5cm} p{3cm}}
+\hline
+Dataset & Year & Reference & Method & Target \\
+\hline
+Private dataset & 2023 & 67 & U-Net & Nucleus and cytoplasm \\
+Private dataset (2100 images) & 2023 & 76 & Improved Boykov's Graph Cut-based Conditional Random Fields and Superpixel imposed Semantic Segmentation Technique (IBGC-CRF-SPSST) RUC-U2 Net & Nucleus and cytoplasm \\
+Herlev dataset (917 images) & 2024 & 78 & Improved Boykov's Graph Cut-based Conditional Random Fields and Superpixel imposed Semantic Segmentation Technique (IBGC-CRF-SPSST) RUC-U2 Net & Cervical cancer region \\
+Intel \& MobileODT dataset (1200 images) & 2024 & 78 & Improved Boykov's Graph Cut-based Conditional Random Fields and Superpixel imposed Semantic Segmentation Technique (IBGC-CRF-SPSST) RUC-U2 Net & Cervical cancer region \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Weighted Fuzzy C-Means (WFCM) Clustering}
+Nucleus
+2024
+\subsection{Dual-domain mapping segmentation network}
+Nucleus
+Herlev dataset (917 images) \& SIPaKMeD dataset (4049 images) ISBI 2015 dataset, Private dataset (2500 images)
+Sn = 99.3 \%, Sp = 99.19, Acc = 99.09 \% ISBI 2015: DC = 0.89, TP = 0.92, FP = 0.002, FN = 0.26 SZU: 0.84, TP = 0.88, FP = 0.004, FN = 0.31 Sn = 98.39 \%, Sp = 100 \%, JI = 93.06 \% P = 98.76 \%, R = 98.38, DSC = 98.57 \%, JI = 97.19 \% ISBI2014: DSC = 93 \%, FNR = 11 \%, TPR = 93 \%, FPR = 0.1 \% ISBI2015: DSC = 92 \%, FNR = 13 \%, TPR = 91 \%, FPR = 0.1 \% Private: DSC = 92 \%, FNR = 15 \%, TPR = 93 \%, FPR = 0.13 \% Acc = 99.3 \%, Sn = 98.1 \% \& Sp = 99.4 \% P = 92 \%, R = 91 \% \& ZSI = 91 \% P = 92.58 \%, R = 92.24 \& ZSI = 92.07 \% Single cell: DC = 94.3 \%, FNR = 7.9 \% Overlapped: DC = 89.9 \%, FNR = 6.4 \% Nucleus: DC = 94.11 \%, P = 93.01 \%, R = 96.10 \% Cytoplasm: DC = 81.25 \% Sn = 94 \%, Sp = 58 \%, PPV = 49 \% NPV = 96 \% IoU = 0.5, Sn = 1, Sp = 92 \% \& Acc =96 \%
+Acc = 99.1 \%, PSNR = 22.81 \%, Dice =21.33 \%, RMSE = 97.04 \%, SSIM =93.39 \% \& MSE = 42.28 \% DSC = 0.894, IoU = 0.812, Sp = 0.8571 \& Sn = 0.9524 Acc = 99.78 \%, P = 96 \%, Sn = 98.92 \% \& Sp = 99.32 \%
+PA = 94.00 \%, DC = 77.78 \%, MPA =86.53 \%, MIoU = 81.13 \% \& FMIoU =89.96 \% Acc = 97.8 \%, Sp = 91.3 \% \& R = 89.8 \%
+MIoU = 91.5 \%, P = 92.2 \%, R = 90.4 \%, AP = 90.1 \%, Sp = 91.3 \% \& FPS =67
+Mask Abnormal Cell Detection R-CNN (MACD R-CNN), Dice Similarity Coefficient (DSC), Dice Coefficient (DC), Mean Intersection over Union (MIoU), False Positive (FP), False Negative (FN), False Positive Rate (FPR), False Negative Rate (FNR), Jaccard Index (JI), Z-score Index (ZSI), Positive Predicted Value (PPV), Negative Predicted Value (NPV), Peak Signal-to-Noise Ratio (PSNR), Root Mean Squared Error (RMSE), Structural Similarity Index (SSI), Mean Squared Error (MSE), Pixel Accuracy (PA), Mean Pixel Accuracy (MPA), Frequency-weighted Mean Intersection over Union (FMIoU), Frames Per Second (FPS), Accuracy (Acc), Sensitivity (Sn), Specificity (Sp).
+Detection in one single shot, but with multi‑scale feature maps for detecting abnormal regions in different sizes. These models can capture the spatial relations, process the high resolution images and provide the localization and classification in an end‑to‑end and efficient manner and the studies are summarized in Table 7. Typically, they function in two primary phases: initially, they identify regions of interest within the image, and then they identify and locate the objects in those regions.
+\subsection{Vision transformers}
+Vision Transformer (ViT) is a type of neural network architecture that originated from the adaptation of transformer models that were first used in Natural Language Processing tasks, such as machine translation. Rather than handling a sequences of words, ViT attends over sequences of image patches. The central idea is to regard an image as a sequence of fixed‑size patches just as words in a sentence and use the self‑attention mechanism of the transformer to capture global dependencies among these patches. The architecture of the ViT model is divided into main three blocks:
+Input Processing and patch Embedding: At the first step of the pipeline, the input image is decomposed into small (non‑overlapping) patches. Then, these are flattened and consistently randomly projected into a fixed‑size vector embedding. The embeddings are then tokenized as a sequence, and positional embeddings are added for the spatial position of each patch, maintaining relative position as the transformer architecture does not have inherent position information because of its permutation invariance.
+
+Input Processing and patch Embedding: At the first step of the pipeline, the input image is decomposed into small (non‑overlapping) patches. Then, these are flattened and consistently randomly projected into a fixed‑size vector embedding. The embeddings are tokenized as a sequence, and positional embeddings are added for the spatial position of each patch, maintaining relative position as the transformer architecture does not have inherent position information because of its permutation invariance \cite{ref94}.
+Transformer Encoder Blocks: The ordered series of patch embeddings are inputs to multiple transformer encoder layers, each of which consists of Multi‑head Self‑Attention (MSA) to model global attention on patches, Layer Normalization (LN) for training stability, and a Multilayer Perceptron (MLP) applied to each token separately \cite{ref17}. Normalized layers are followed by residual connections, which facilitate gradient flow and optimization \cite{ref95}.
+Classification Head: For classification, a learnable token is introduced (special token) and the output of this transformer encoder is used as a pooled representation of the whole input image. Finally, this representation is passed through a last Multilayer Perceptron classifier to predict associated labels, illustrated in Fig.~\ref{fig:4}.
+ViT has achieved state‑of‑the‑art levels of performance in computer vision applications including medical image classification and segmentation for cervical cancer diagnosis, even outperforming the standard CNNs \cite{ref96}. Table~\ref{tab:8} summarizes the few studies reviewed in this work. In contrast to CNNs, ViTs are better at learning long‑range dependencies by utilizing the self‑attention mechanism, which makes them suitable to model the global context in images \cite{ref97}. Table~\ref{tab:9} compares CNNs and ViTs and highlights their relevance to cervical cancer detection.
+These findings indicate a noticeable interest with Vision Transformers on cervical cancer detection, and hybrid versions (i.e., CNN‑ViT or tokenization ViTs) are generally superior to Vision Transformers alone. Hybrid architectures achieved accuracies exceeding 97\% across the Herlev, SIPaKMeD and Mendeley datasets, while Vision Transformers trained from scratch achieved marginally lower accuracy. This indicates improved performance, likely due to the fact that CNNs were specifically designed for learning local features, while ViTs were aimed towards learning the global context which translates to improved performance when combined, reflecting their feature extraction capabilities. While ViTs show promise due to the relatively high accuracies in cervical cancer classification, trustworthiness is still based on generalizability, as future validation with larger data and more general patient cohorts is needed.
+\subsection{Generative adversarial network (GAN)}
+Generative Adversarial Networks (GANs) have become an influential class of deep learning techniques and are applied in many transformation problems in computer vision \cite{ref103}. GANs are formed by two neural networks, Generator and Discriminator, that compete in a game system as shown in Fig.~\ref{fig:5}. The Generator is trained to create realistic images from random noise, while the Discriminator is trained to tell real images apart from fake images \cite{ref104}. GANs are trained to create vividly realistic visual data. In computer vision, GANs have been adopted for the generation, enhancement, or transformation of images \cite{ref34}. It is their ability to capture and learn complex data distributions which makes them suitable even for non‑training‑time‑modality transfer applications, such as image generation, synthesis and image‑to‑image translation. In medical imaging, GANs are also helpful for data augmentation since the availability of annotated images is often restricted \cite{ref105}.
+This synthetic data generation aids in addressing the issues of having scarce and imbalanced data in cervical cancer detection tasks. GAN approaches have shown that models can learn from synthetic data which are ...
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.8\linewidth]{images/figure4.png}
+\caption{Illustration of the classification head architecture}
+\label{fig:4}
+\end{figure}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.8\linewidth]{images/figure5.png}
+\caption{Generator–Discriminator framework of a GAN}
+\label{fig:5}
+\end{figure}
+\begin{table}
+\centering
+\caption{Key challenges in segmentation versus detection tasks in cervical cancer imaging}
+\label{tab:6}
+\begin{tabular}{lll}
+\hline
+Aspect & Segmentation & Detection \\
+\hline
+Annotation & & \\
+Class imbalance & & \\
+\hline
+\end{tabular}
+\end{table}
+
+Class imbalance
+Scale and context
+Generalization
+issues
+Computational
+demand
+Requires detailed pixel‑level labeling, which is time‑consuming, costly, and often inconsistent across experts. Lesion pixels are heavily outnumbered by background pixels, causing models to favor the background. Captures fine detail but often misses global context unless combined with multi‑scale or transformer features. Highly sensitive to staining consistency, scanner variability, and labeling noise at the pixel level. Very resource‑intensive, especially for high‑resolution slides and whole‑image segmentation.
+Needs only region labels, but these can still be subjective and may miss subtle lesion boundaries. Positive boxes are much fewer than negative regions, reducing sensitivity to rare lesions. Captures broader context but sacrifices precision at the lesion boundary.
+Can underperform when lesion appearance varies across imaging conditions.
+Less computational demand.
+\begin{table}
+\centering
+\caption{Object detection techniques applied to cervical cancer detection.}
+\label{tab:objdet}
+\begin{tabular}{llllll}
+\hline
+Year & Reference & Method & Class & Data & Results \\
+\hline
+2021 & & & & & \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}
+\centering
+\caption{Summary of methods and datasets}
+\label{tab:summary}
+\begin{tabular}{lllll}
+\hline
+Year & Reference & Method & Classes & Dataset \\
+\hline
+2021 & [85] & SSD Network & 4 class & Private dataset (1462 images) \\
+2021 & [86] & & & \\
+2021 & [87] & & & \\
+2021 & [88] & & & \\
+2021 & [33] & AttFPN, Faster R- CNN, RetinaNet, CCBDFaster R- CNN, HLDnetRetinaNet & & \\
+2022 & [89] & YOLOv5 & & \\
+\hline
+\end{tabular}
+\end{table}
+
+YOLOv5 (2022) \cite{ref83}.
+YOLOv3: 2 class; Private dataset (7030 images).
+1 class; Private dataset.
+Private dataset (10619 images); Kaggle dataset (783 images).
+7 and 2 class; Herlev dataset (917 images) \& Private dataset (2000 images) (2022) \cite{ref84}.
+2023 \cite{ref90}: Faster R‑CNN, Faster R‑CNN, GAN.
+
+\section{Faster R‑CNN and GAN}
+Faster R‑CNN, GAN.
+\subsection{Two‑class classification}
+Private dataset (3105 images), SIPaKMeD dataset (4049 images) and Herlev dataset (917 images) were used.
+\begin{table}
+\centering
+\caption{Summary of datasets and performance}
+\label{tab:performance}
+\begin{tabular}{l l}
+\hline
+Dataset & Performance \\
+\hline
+Private dataset (3105 images) & Acc = 90.8\%, Sn = 95.7\%, Sp = 89.9\% \\
+SIPaKMeD dataset (4049 images) & mAP = 81.53\% \\
+Herlev dataset (917 images) & Acc = 90.9\%, Sn = 91.3\%, Sp = 90.6\% \\
+\hline
+\end{tabular}
+\end{table}
+Additional results: 7‑class: Acc = 90.8\%, Sn = 95.7\%, Sp = 89.9\%, mAP = 78.87\%; 2‑class: Acc = 98.8\%, Sn = 96.7\%, Sp = 98.4\%, mAP = 78.87\%; Acc = 99\%; Acc = 99.81\%, mAP = 89.4\%.
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.8\linewidth]{images/figure5.png}
+\caption{Architecture diagram of ViT}
+\label{fig:vit-architecture}
+\end{figure}
+Abbreviations: Single Shot MultiBox Detector (SSD), Attention feature pyramid network (AttFPN), High‑grade squamous intraepithelial lesion or above (HSIL+), HSIL+ Detection Network (HLDnet), Intersection over Union (IoU), Accuracy (Acc), Sensitivity (Sn), Specificity (Sp), mean Average Precision (mAP), Average Precision (AP).
+H. Mbelwa et al.
+Informatics in Medicine Unlocked 60 (2026) 101726
+\begin{table}
+\centering
+\caption{Summary of ViT techniques applied to cervical cancer detection}
+\label{tab:vit-techniques}
+\begin{tabular}{l}
+\hline
+\hline
+\end{tabular}
+\end{table}
+\begin{table}
+\centering
+\caption{Comparison of CNNs and ViTs in the context of cervical cancer detection}
+\label{tab:comparison}
+\begin{tabular}{lllll}
+\hline
+Data & Results & Feature & CNNs & VITs \\
+\hline
+% data rows omitted
+\hline
+\end{tabular}
+\end{table}
+
+\section{VITs}
+\subsection{Robustness and generalization}
+Relatively stable with limited data but sensitive to distribution shifts.
+\subsection{Interpretability}
+Provide feature maps and saliency-based visualizations. 
+Generalize well to different datasets when pre‑trained, but their performance becomes less reliable without it. 
+Offer attention maps that highlight global context.
+\subsection{Computational efficiency}
+Lower latency and resource demands hence suitable for real‑time use. 
+Require more computing power.
+\subsection{Contextual modeling}
+Capture local patterns effectively and require extra modules to expand receptive fields. 
+Naturally integrate long‑range dependencies across an image.
+\subsection{Implications for cervical cancer detection}
+CNNs are safer in small datasets, ViTs may generalize better if trained with large‑scale datasets. 
+Both can support clinical decision‑making, but attention maps from ViTs may provide more intuitive insights for pathologists. 
+CNNs are more viable for low‑resource settings while ViTs are promising in clinical settings with high‑performance infrastructure. 
+CNNs work well for cytology tasks (Pap smears) where local features dominate, whereas ViTs are advantageous for histopathology and colposcopy images that require global context.
+\section{Private dataset}
+Acc = 98.6 \%, P = 97.5 \%, Sn = 98.1 \%, Sp = 98.2 \% \& F1‑score = 98.4 \%.
+
+\begin{table}
+\centering
+\caption{Summary of methods on private dataset}
+\label{tab:summary}
+\begin{tabular}{lll}
+\hline
+Year & Reference & Summary of the method \\
+\hline
+2024 & [98] & 3D CNN‑ViT combined with Kernel Extreme Learning Machine (KELM) for cervical image classification; proposed a conjugated Attention Mechanism (AM) and Vision Transformer (VT) for feature extraction of cancer nests \\
+2023 & [99] & \\
+2024 & [100] & Vision Transformer fine‑tuned from scratch; Hybrid CNN + ViT with PCA + LDA for feature reduction and classification \\
+2024 & [101] & \\
+2024 & [102] & Tokens‑to‑Token Vision Transformer with progressive tokenization \\
+\hline
+\end{tabular}
+\end{table}
+\textbf{Accuracy}: 89\% .
+
+\section{Tokens-to-Token Vision Transformer with progressive tokenization}
+SIPaKMeD dataset (4049 images) Herlev dataset (917 images), Mendeley LBC (963 images), SIPaKMeD (4049 images) Mendeley dataset (963 images).
+Acc = 94\%.
+Herlev: Acc = 97.83\%, Mendeley LBC: Acc = 100\%, SIPaKMeD: Acc = 98.52\% Acc = 98.4\%.
+Acc = Accuracy, P = Precision, Sp = Specificity.
+synthetically generated and more diversified \cite{ref106}. This enhances the model’s capacity to generalize to new, unseen data while avoiding overfitting \cite{ref107,ref108,ref109}. Furthermore, GAN methods increase the sensitivity and specificity in cancer detection systems \cite{ref110}. Table~\ref{tab:gan_summary} provides a summary of the reviewed studies on GAN applications.
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.8\linewidth]{images/figure6.png}
+\caption{Illustration of GAN architecture.}
+\label{fig:gan_architecture}
+\end{figure}
+\subsection{Multimodal fusion models}
+Multimodal fusion models are machine learning models that combine information from a variety of data modalities (images, text, audio or sensor signals) for more accurate and contextually correct predictions or decisions \cite{ref115,ref116}. In healthcare, these models have great potential to improve diagnostic accuracy and care at the personal level by exploiting the complementary information contained in multiple data types \cite{ref117}. Nonetheless, these models’ complexity and wide applications emphasize the importance of robust evaluation frameworks to protocolize, standardize, and validate their use as well as to ensure interpretability, safety, and ethical deployment in clinical environments \cite{ref118}.
+An example of these models are Large Vision-Language Models (LVLMs) that integrate visual and language information in the same architecture to solve tasks such as image captioning, visual question answering, and multimodal dialog \cite{ref118}. Moreover, models like GPT-4V, Flamingo \cite{ref119}, BLIP-2 \cite{ref120}, and MiniGPT-4 \cite{ref121} show the promise of LVLMs in the context of multimodal reasoning by helping enrich the visual context along with the language. Their success demonstrates the great power that multimodal methods can have in generic and domain-specific tasks in cervical cancer detection as listed in Table~\ref{tab:gan_summary}.
+\begin{table}
+\centering
+\caption{Summary of GAN techniques applied to cervical cancer detection.}
+\label{tab:gan_summary}
+\begin{tabular}{lll}
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}
+\centering
+\caption{Summary of GAN techniques applied to cervical cancer detection.}
+\label{tab:gan_cervical_cancer}
+\begin{tabular}{lllll}
+\hline
+Year & Reference & Summary of the method & Data & Results \\
+\hline
+2024 & [111] & & & \\
+2021 & [35] & & & \\
+2024 & [112] & & & \\
+2021 & [113] & & & \\
+2024 & [114] & & Private dataset & Acc = 91 \% \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Challenges in cervical cancer detection}
+Acc = 91\% 
+Colposcopic images dataset (100 images) 
+Private dataset (1000 images) 
+Private dataset 
+Private dataset 
+SSIM = 0.6182, PSNR = 16.7340 dB, MSE = 444.8, SSIM: 0.66 
+Sn = 95.9\%, Acc = 93.8\%, AUC = 0.984 
+Acc = 97.08\%, R = 100\%, P = 95.62\% 
+Two-stage Solo GAN with YOLOv3 for segmentation of overlapping cervical cells; Combined Retinex theory and Conditional GAN (CGAN) for image enhancement; Deep Convolutional GAN for synthetic image generation; Five-layer CNN‑GAN for abnormal image generation (class imbalance) and CNN (AlexNet) classification; Proposed a hybrid Small Object Detection‑Generative Adversarial Network (SOD‑GAN) and combined it with Fine Tuned Stack Auto‑Encoder (F‑SAE) with R‑CNN for small nuclei detection. 
+Language model to provide model classification, and importantly the aggregated report provides detailed biological explanations. Furthermore, contrastive learning models with paired image‑text inputs have tremendous workflow efficiencies, as discovered through the development of combined learning approaches, e.g., model refining an initial screening from days to seconds. 
+The cervical cancer diagnosis framework’s practical utility has been increased by the ability of multimodal fusion models to produce thorough diagnostic reports and enable interactive communication. The models lessen the mental and physical burden on cytologists while improving the objectivity, reproducibility, and reliability of cytological tests. Despite the emphasis from some studies that AI should be used as a screening tool to help cytotechnologists rather than for direct diagnosis, many challenges lie ahead for the use of LVLMs in the medical domain relating to accuracy, bias, ethics and hallucination of knowledge. Wide‑spread adoption of such models for clinical application is justified, and to this end, healthcare authorities may need to step in and make investments to ensure that they are reliable for specific clinical tasks and that LVLMs are well‑trained on medical terminology and do not exaggerate healthcare inconsistencies. 
+\subsection{Screening}
+These are the results for RQ2: What challenges and gaps hinder the implementation of these methods into real‑world clinical practice? 
+Acc = Accuracy, SSIM = Structural Similarity Index, AUC = Area Under the Curve, PSNR = Peak Signal‑to‑Noise Ratio, MSE = Mean Squared Error, R = Recall, P = Precision. 
+\begin{table}
+\centering
+\caption{Applications of multimodal fusion models in cervical pre‑cancer and cancer detection}
+\label{tab:applications}
+\begin{tabular}{lll}
+\hline
+% Data rows to be inserted here \\
+\hline
+\end{tabular}
+\end{table}
+
+\section{Data}
+\section{Results}
+Cervical cell screening through images requires extensive resources and highly trained personnel. However, many countries lack access to these resources and skilled professionals \cite{130}. Consequently, there is a need to develop cervical cancer screening workflows that are both cost‑effective and efficient, and that fit current socioeconomic conditions, such as visual‑based methods \cite{131}.
+\begin{table}[htbp]
+\centering
+\caption{Summary of methods}
+\label{tab:summary}
+\begin{tabular}{lll}
+\hline
+Year & Reference & Summary of the method \\
+\hline
+2024 & [122] & \\
+2024 & [123] & \\
+\hline
+\end{tabular}
+\end{table}
+Introduced CerviCAT, a multimodal model combining visual and text features for cervical cytology diagnosis, integrated with a cytology‑specific language model (Cyto‑Vicuna) to allow interactive and detailed reporting. Used paired image‑text data for contrastive learning to develop a visual‑language model. The text encoder received model inputs generated from templates and labels obtained from images. F1 score = 92 \% \& Acc = 86 \%.
+\subsection{Limited datasets}
+Cervical cytology data combining visual cell features and textual descriptions, with 15,020 instruction‑tuning data points from expert annotations and textbooks. Whole slide image data divided per tile and paired with template‑generated text inputs based on image labels. Reduced first screening time to 10 s per case, compared to 4–7 days in traditional workflow. Although computer vision methods for cervical cancer detection offer highly accurate results, they are faced with restricted training datasets due to privacy issues during development \cite{132,133,134}. For such a model to be properly trained, at least thousands of high‑quality images are needed. Nonetheless, the databases of images accessible to the public are very scarce and don’t provide a proper distribution of normal and abnormal cases of the disease \cite{135,136,137}.
+
+Although computer vision methods for cervical cancer detection offer highly accurate results, they are faced with restricted training datasets due to privacy issues during development [132–134]. For such a model to be properly trained, at least thousands of high-quality images, are needed. Nonetheless, the databases of images accessible to the public are very scarce and don’t provide a proper distribution of normal and abnormal cases of the disease [135–137].
+\section{Labelling of image data}
+The process of collecting medical images and accurately labeling them is crucial for building a well‑labeled dataset [130]. Often, pathologists annotate images using their professional knowledge and experience. This can lead to variations in annotations across different experts [131]. Additionally, when images contain multiple regions of interest due to structural abnormalities, there is a tendency to classify images based on the most visibly abnormal area [16,79,111]. Also, the intensive annotation process can be a significant burden for cytologists and pathologists, making it challenging to acquire a large‑scale, high‑quality dataset for cervical screening.
+\section{Inconsistency in image quality}
+Cervical cells images differ greatly due to the variety of imaging instruments, staining procedures, illuminations and operators expertise [138]. These differences may lead to either varying contrast, resolution, or clarity that may in turn impact the CV models performance because they depend a lot on high quality and consistent input data. Poor‑quality images can cause the critical cell characteristics like the size of the nucleus, texture, or the form of cell boundaries to be unclear and not well‑defined, resulting in misclassification and lower detection ratio [139]. In addition, models trained on good quality data might not generalize well to low‑quality or heterogeneous clinical images.
+\section{Model interpretability}
+Computer vision models are typically seen as black box models and it is difficult to get interpretation and the reason for their predictions [140]. Interpretability is essential for building trust with medical professionals and patients in the medical domain, especially in applications such as cervical cancer detection [141]. Furthermore, clinical acceptance greatly depends on the capability to explain the diagnostic decisions. This is paramount due to the complex nature of cervical images, which require context and understanding a feature that current models tend to struggle to do so [142].
+\section{Real time processing requirements}
+Computer vision based solutions need to be fast and accurate for‑high‑resolution cervical images processing in screening and diagnostics [139]. Real time operation requires low‑latency processing, which in turn necessitates efficient algorithms and strong hardware [15]. Nonetheless, some of the deep learning models applied to medical image analysis can be very computationally expensive, and even are based on complicated neural networks that require high computation and storage. This may result in delays especially in resource‑limited settings like the low‑ and middle‑income healthcare facilities [132].
+\section{Integration into clinical workflow}
+From a technical perspective, integrating AI models with hospital infrastructure, real‑time data processing, and hardware acquisition may be complicated and require large capital input [138]. As well, the data needs to be perfectly integrated and deployed in clinical setting to be successfully adopted. Clinically, implementing new models can disrupt existing practices, change professional responsibilities, and necessitate significant training of healthcare practitioners, as well as changes in quality control procedures [143]. From an economic opinion, the use of such technologies must be driven by a clear cost‑benefit analysis, but most healthcare organizations do not have the required in‑house Information Technology expertise to manage and serve these systems over time [144].
+\section{Class imbalances}
+
+\section{Class imbalances}
+In many instances, abnormal or cancer cell images are significantly less represented in existing datasets when compared to normal cell images \cite{ref145}. This can cause models to be biased towards the majority class, have a high overall accuracy and perform poorly in accurately identifying rare but important abnormal observations \cite{ref146,ref147}. Such biased learning will influence the model’s sensitivity (recall) to cancerous cells, which would be catastrophic, mainly in the case of cervical cancer diagnosis problems \cite{ref148,ref149}.
+\section{Ethical barriers to deployment}
+These include patient privacy, algorithmic bias, informed consent and accountability. It is well known that medical image data that are used to train the CV models are sensitive in nature, hence there are privacy and security concerns associated with such data if not sufficiently anonymized or operated with strict data governance measures \cite{ref124,ref125}. Also, models trained on non-diverse data can have biased performance, which results in inconsistency of the quality of diagnosis and fairness and trust in the technology \cite{ref150}.
+AI models further limits the ability of clinicians and patients to comprehend and accept the diagnostic outputs of the AI model, adding to the complexity of the informed consent process \cite{ref6,ref7}. Also, it is ethically challenging to attribute responsibility and accountability for‑incorrect consequences, particularly when decisions are co‑made between AI and human clinicians \cite{ref151,ref152}.
+\section{Discussion}
+This review was guided by two main research questions, which we addressed through a structured process of searching, screening, and analyzing the literature. For RQ1 (Which computer vision methods have been used for cervical cancer detection, and how well do they perform in terms of effectiveness and clinical applicability?), studies collected from major databases were examined, covering both traditional techniques and recent advancements. The methods were organized into categories such as segmentation, classification, detection, vision transformers, GANs, and multimodal models along with the used datasets, evaluation metrics and reported results. This approach enabled assessment of overall effectiveness and potential relevance of the techniques in clinical practice.
+For RQ2 (What challenges and gaps hinder the implementation of these methods into real‑world clinical practice?), the limitations highlighted in the studies were reviewed and organized them broader themes, including limited and non‑diverse datasets, overlapping cellular structures, annotation inconsistencies, issues with generalizability, and obstacles to clinical adoption. The analysis demonstrated several factors that slow the translation of computer vision methods from research to practice, while also pointing out the key directions emphasized in the literature as necessary steps for future progress.
+\subsection{Types of models used}
+The analysis of the articles revealed that approximately 61.6\% of studies employed classification techniques. Many of the networks utilized in this Systematic Literature Review are modified architectures, such as those leveraging transfer learning and hybrid approaches, including VGG-16, VGG-19, Inception V3, ResNet50 and ResNet101. Furthermore, ViTs, GANs, and Multimodal models have proven to perform well in cervical cancer detection \cite{ref35,ref98,ref122}.
+For segmentation tasks, which accounted for 24.6\% of the studies, Mask R‑CNN and U‑Net were the most frequently used architectures. Similarly, for object detection tasks (13.6\% of the articles), R‑CNN and YOLO were the predominant choices. These findings suggest that researchers are primarily focused on addressing the challenge of early detection. The preference for computer vision‑based approaches stems from their scalability, ability to perform automatic feature extraction and robustness \cite{ref64} compared to traditional techniques, which heavily rely on predefined parameters and image‑specific characteristics \cite{ref19}. Consequently, the authors advocate for the application of computer vision‑based techniques in cervical cancer diagnosis \cite{ref18}. Table 12 provides a summary of the comparison of the types of models used.
+Additionally, of all computer vision tasks studied, image classification emerged as the most prevalent and successful, outperforming object detection and segmentation \cite{ref42,ref43,ref60}. This is likely because there is a lot of data available for classification and the relative simplicity of curating such data for identification purposes, as opposed to the more complex process of generating ground truth annotations required for object detection and segmentation \cite{ref6,ref17,ref18,ref19}. Since delicate features are frequently difficult to recognize, even through direct physical examination, using higher‑resolution images could significantly improve the accuracy of recognizing them.
+\subsection{Explainability in cervical cancer detection}
+In addition, the black‑box nature of the decision making process of
+
+\begin{table}
+\centering
+\caption{Comparison of the commonly used Computer Vision techniques for cervical cancer detection.}
+\label{tab:cv-techniques}
+\begin{tabular}{|l|p{5.5cm}|p{5.5cm}|}
+\hline
+\textbf{Type of models} & \textbf{Strengths} & \textbf{Limitations} \\
+\hline
+CNN & Good at spatial feature extraction & Requires large datasets, Computationally intensive \\
+\hline
+ViT & Captures global dependencies, Scales well with large datasets & Limited context understanding, Requires large scale training data \\
+\hline
+GANs & Generates realistic synthetic data, Useful for data balancing & Training instability, Less effective on small datasets \\
+\hline
+Mask R-CNN & High precision in object boundaries, Real‑time detection & Computationally intensive, Lower accuracy on small objects \\
+\hline
+YOLO & Fast and efficient, High detection accuracy & Lower accuracy on small objects, Complex architecture \\
+\hline
+Faster R-CNN & Good for small object detection & Computationally intensive, Lower accuracy on small objects \\
+\hline
+Multimodal models & Combine image and clinical text data & Requires large datasets, Complex architecture \\
+\hline
+\end{tabular}
+\end{table}
+
+Lower accuracy on small objectsComplex architecture
+Complex design Data integration challenges
+cancer detection is the growing emphasis on model explainability \cite{ref153}. This helps confirm that the model is concentrating on significant patterns by displaying which features or areas of the image affected the result. Recent research have addressed cervical cancer identification with explainability; for instance, a study by Ref. \cite{ref154} applied explain‑able AI tools such as GradCAM, GradCAM++, and Layer‑wise Relevance Propagation to a cytology classification model built on the Herlev dataset. The results reveal not only which regions of the cell images the model focuses on (nucleus and cytoplasm) but also show that altering these critical regions reduces prediction confidence. This helps confirm that the model is relying on medically meaningful features rather than spurious patterns. By combining multiple CAM techniques, Sritharan et al. \cite{ref155} developed a median map that more accurately identifies the nuclei in Pap smear images. These illustrations show how AI decisions are becoming more transparent for medical professionals. However, they also highlight weaknesses, such as limited tests across various cytology data types, few classes beyond binary classification, and possible explainability sensitivity to image variations.
+\section{Limitation in cytology}
+The field of digital pathology has been significantly advanced by foundation models trained on large‑scale histology datasets. For instance, the CHIEF model \cite{ref156} was built using more than 60,000 slides from 19 anatomical sites, learning generalizable representations that support a wide range of tasks, including cancer detection, tumor origin identification, molecular profiling, and prognosis prediction. Likewise, Prov‑GigaPath, which was pre‑trained on over 1.3 billion image tiles from more than 170,000 slides across 28 cancer centers, has delivered state‑of‑the‑art results in cancer subtyping and mutation prediction \cite{ref157}; these efforts highlight the transformative impact of foundation models in histology. However, cytology remains far less explored: large annotated datasets are scarce, and challenges such as overlapping cells and subtle morphological differences make analysis more difficult \cite{ref156}. These limitations have so far hindered the development of cytology‑specific foundation models, underscoring the importance and novelty of approaches that focus directly on cytological image analysis for cervical cancer detection.
+including overlapping cells and staining inconsistencies, while deep learning methods, though more advanced, usually depend on large annotated datasets and may not generalize well across different imaging conditions. Recent developments, such as deep convolutional networks for multiplex segmentation \cite{ref159} and frameworks for semi‑supervised consistency learning have demonstrated promise in enhancing robustness \cite{ref160}. However, these approaches are still challenged by confirmation bias, excessive perturbations, and unstable performance; these difficulties highlight the need for segmentation techniques that are more robust and flexible in order to successfully handle the particular complexity of cytology images \cite{ref161}.
+\section{Future directions}
+Considering the outlined limitations and the current progress in computer vision research for cervical cancer detection, the following are some possible future directions.
+\subsection{Multi‑modal data fusion}
+Integrating Natural Language Processing (NLP) and Computer Vision (CV) technologies to extract features from both images and healthcare records enables the development of a multi‑modal classification model \cite{ref162}, which can greatly improve early and accurate disease diagnosis and support personalized treatment recommendations \cite{ref124,ref125}. With recent developments in multi‑modal learning, combining various imaging modalities, such as ultrasound and MRI, can enhance the precision and reliability of cervical cancer diagnosis \cite{ref119}. This can be accomplished by creating fusion strategies that combine complementary data from these methods to accurately detect the cancer lesions and boundaries. Beyond cervical cytopathological images, medical notes from electronic medical records, containing valuable personal information such as age, menstrual cycle duration, medical history and cytology screening records can further support a more accurate diagnosis \cite{ref163}. Molecular examinations are becoming increasingly important in supporting accurate diagnosis and guiding clinical decisions in cervical cancer. Recent multimodal approaches that integrate histology with molecular or genomic data have shown clear benefits, from improving spatial profiling of tissues \cite{ref164} to enhancing cancer risk stratification through co‑attention frameworks \cite{ref165}. In cervical cancer, combining cytology images with molecular markers such as HPV genotyping or transcriptomic profiles could strengthen diagnostic confidence, particularly in challenging cases \cite{ref162}. Currently, to the best of our knowledge, there is very little existing research on multi‑modal data‑based diagnosis in cervical cytology, making this a promising direction for future work \cite{ref122,ref150,ref166}.
+\subsection{Model explainability}
+Closing the gap between high‑performing AI models and their application in clinical settings should be a top priority for AI‑based cervical cancer research \cite{ref167}. The majority of current methods are still only used in experimental research and have not yet been incorporated into screening and diagnostic workflows in real‑world settings. Models must show resilience across imaging platforms, be trained and validated on a variety of multi‑center datasets, and adhere to ethical and legal standards in order to be adopted. Furthermore, recent research on reliable AI for medical diagnosis has demonstrated that adding explainability frameworks to these models can increase transparency and foster clinician trust \cite{ref168}.
+\subsection{Limitations in cell segmentation methods}
+\subsection{Annotation‑efficient learning}
+Accurate cell segmentation is critical for reliable cell counting in cervical cancer pre‑screening and diagnostics, but it continues to be a major challenge \cite{ref158}. Traditional approaches often face challenges.
+Annotation‑efficient learning describes the methods that aim to decrease the dependence on manual annotations, which is of importance in medical imaging, where expert annotations are laborious, costly, and...
+```
+
+frequently scarce. For cervical cancer screening, it may involve different machine learning approaches that allow models to leverage unlabeled data, pre‑existing knowledge from related tasks or automatically generated labels to minimize the need for extensive annotations to make computer vision tasks more scalable and practical [33]. More information on the approaches is provided below.
+\subsubsection{Semi supervised learning}
+Semi supervised Learning is an important approach in the field of cervical cancer screening, which uses only a small amount of labeled data and a large amount of unlabeled data to perform model enhancement [169]. Conventional method is to start with training a network on the labeled part and leveraging its prediction to assign classes of the remaining data, which will be fed back to train the network again and again. Pseudo‑labeling and consistency regularization are the types of techniques that are often used [170].
+\subsubsection{Self‑supervised learning}
+This technique generally pre‑trains models using un‑annotated data, feeding the model with tasks such as image rotation prediction or contrastive loss, to learn high‑level visual representations [30]. For the application of cervical cancer screening, researchers can pre‑train a model using contrastive learning methods [31], on a large pool of un‑labeled cervical cell images, and then fine‑tune it using a smaller labeled one. This way the performance of downstream tasks like classification and segmentation is improved due to the use of richer task‑relevant features learned during pre‑training [52].
+\subsubsection{Active learning}
+Active learning is a time‑saving methodology, where the most informative unlabeled samples are annotated by the expert, in order to minimize the overall annotation work. In the context of cervical cancer screening it can be accomplished by using uncertainty sampling methods, such as entropy and margin sampling which are used to identify those ambiguous images that would be most beneficial for the model [171]. Upon acknowledgement by pathologists, these selected cases will be displayed for review in a graphical interface to facilitate efficient targeted labeling that maximizes the efficiency in model training and minimizes annotation burden [172].
+\subsubsection{Weakly supervised learning}
+Weak supervision is used as a dense annotation‑efficient model of image annotations and not necessarily pixel‑wise detailed annotations. In the setting of cervical cancer screening, this can be achieved by training classification models with slide‑level diagnosis annotations and exploiting attention‑based multiple instance learning on identifying informative regions [173]. This approach can be successful for cervical smear image analysis, for which the detailed annotations are scarce, and the model can be meaningfully trained even with coarse annotations [174].
+\subsubsection{Data augmentation and synthesis}
+Data augmentation and synthesis contribute to the training data by increasing its scope under cases of scarcity of labeled data. Traditional techniques like flipping, rotation and contrast change are used to generate diverse image samples [103]. Furthermore, images of cervical cells may be generated by generative models, for instance GANs, to augment the dataset with realistic synthetic data [111]. The intention of these strategies is to enhance the generalization and robustness of the model and its performance in realistic cervical cancer screening settings [104].
+\subsection{Federated learning}
+As medical services improve and the Internet of Things (IoT) expands in healthcare, there is increasing concern over the security and confidentiality of medical data [94]. The absence of data privacy has hindered data exchange between medical institutions, impacting the development and validation of DL models with strong generalization [175]. Recently, Federated Learning (FL) has been introduced as a resolution to this challenge, enabling multiple parties to collaboratively train a shared model without the need to exchange their data [176]. By combining DL models, IoT and FL, it is possible to enhance the accuracy and generalization of DL‑based models while maintaining the privacy and security of patient records [177].
+\section{Conclusion}
+
+\section{Conclusion}
+A systematic review of research on computer vision methods for cervical cancer detection from medical images was conducted. An overview of cervical cancer and its current screening procedures is first introduced. Then, this study provides an overview of computer vision along with extensive compilation of publicly available image datasets used in existing cervical cancer research as well as the performance evaluation metrics used in evaluating computer vision based methods. Our analysis revealed several predominant techniques: image classification (transfer learning, and both ensemble and hybrid models), various types of segmentation (including overlapping and non‑overlapping segmentation, nucleus and segmentation, and whole‑slide‑image diagnosis) and object detection (abnormal cell detection). Transfer learning proved valuable by allowing the adaptation of pre‑trained models to new applications, particularly when dealing with limited labeled data. Hybrid architectures provided researchers the flexibility to customize their models specifically for cancer lesion identification. Segmentation helped in the identification of cellular abnormalities, particularly in challenging scenarios such as overlapping cells or varying cell morphologies whereas object detection localized and identified suspicious lesions on colposcopic images.
+Additionally, this work surveys recent advancements and current trends in computer vision including Vision Transformers, GANs and multimodal fusion models. These methods have shown that they have the potential to improve the performance of cervical cancer detection since they can model complex patterns in cervical cancer imaging data and combine different data modalities.
+Furthermore, the study reviews the recent development multimodal fusion techniques to improve the detection of cervical cancer through the utilization of multi‑layered diagnostic models, which use more than one type of data modality to identify the inter‑relationships between data that can be missed by unimodal diagnostic models. The combination of data from multiple modalities has demonstrated significant improvements in the ability of diagnostic systems to accurately detect disease; therefore, developing advanced multimodal architectures will provide researchers with an opportunity to create more robust, reliable detection devices.
+This survey evaluates and categorizes the computer vision approaches used in cervical cancer diagnosis while highlighting current limitations in existing research. Our findings indicate that while no single model emerges as universally superior, computer vision and deep learning consistently enhance the sensitivity and accuracy of cervical cancer detection and classification. Additionally, this work identifies promising areas for future studies, including improvements in data preprocessing, attribute representation, model architectures, clinical implementation and privacy protection.
+\section{CRediT authorship contribution statement}
+Hope Mbelwa: Writing – review \& editing, Writing – original draft, Methodology, Conceptualization. Judith Leo: Writing – review \& editing, Supervision. Crispin Kahesa: Writing – review \& editing, Supervision. Elizabeth Mkoba: Writing – review \& editing, Supervision.
+H. Mbelwa et al.
+Informatics in Medicine Unlocked 60 (2026) 101726
+\section{Ethics statement}
+This manuscript is a review article and does not involve any studies with human participants or animals performed by any of the authors. All data discussed are from previously published studies, which were properly cited and acknowledged. Ethical approval and informed consent were obtained in the original studies as stated in their respective publications.
+\section{Declaration of competing interest}
+The authors declare that they have no known competing financial interests or personal relationships that could have appeared to influence the work reported in this paper.
+\section{Acknowledgement}
+The authors would like to thank Dr. Muhammad Usman from Glasgow Caledonian University for his contributions to the manuscript review, and all the insightful ideas and suggestions.
+
+% ===== REFERENCES =====
+
+\begin{thebibliography}{99}\bibitem{ref1} [1] Deo SVS, Sharma J, Kumar S. GLOBOCAN 2020 report on global cancer burden: challenges and opportunities for surgical oncologists. Ann Surg Oncol 2022;29 (11):6497–500. https://doi.org/10.1245/s10434-022-12151-6.
+
+\bibitem{ref2} [2] Maurya S, Tiwari S, Mothukuri MC, Tangeda CM, Nandigam RNS, Addagiri DC. A review on recent developments in cancer detection using machine learning and deep learning models. Biomed Signal Process Control 2023;80(March 2022). https://doi.org/10.1016/j.bspc.2022.104398.
+
+\bibitem{ref3} [3] Chitra B, Kumar SS. Recent advancement in cervical cancer diagnosis for automated screening: a detailed review. J Ambient Intell Humaniz Comput 2022; 13(1):251–69. https://doi.org/10.1007/s12652-021-02899-2.
+
+\bibitem{ref4} [4] Mremi A, Mchome B, Mlay J, Schledermann D, Blaakær J, Rasch V. Performance of HPV testing, Pap smear and VIA in women attending cervical cancer screening in Kilimanjaro region, Northern Tanzania: a cross-sectional study nested in a cohort. BMJ Open 2022;12(10):1–8. https://doi.org/10.1136/bmjopen-2022- 064321.
+
+\bibitem{ref5} [5] Kahesa C, et al. Comparison of human papillomavirus-based cervical cancer screening strategies in.pdf. Int J Cancer 2023;152(4):686–96. https://doi.org/ 10.1002/ijc.34283.
+
+\bibitem{ref6} [6] Jiang P, et al. A systematic review of deep learning-based cervical cytology screening: from cell identification to whole slide image analysis. Netherlands: Springer; 2023. https://doi.org/10.1007/s10462-023-10588-z. vol. 56, no. s2.
+
+\bibitem{ref7} [7] Conceiç˜ao T, Braga C, Rosado L, Vasconcelos MJM. A review of computational methods for cervical cells segmentation and abnormality classification. Int J Mol Sci 2019;20(20). https://doi.org/10.3390/ijms20205114.
+
+\bibitem{ref8} [8] William W, Ware A, Basaza-Ejiri AH, Obungoloch J. A review of image analysis and machine learning techniques for automated cervical cancer screening from pap-smear images. Comput Methods Programs Biomed 2018;164:15–22. https:// doi.org/10.1016/j.cmpb.2018.05.034.
+
+\bibitem{ref9} [9] Rahaman MM, et al. A survey for cervical cytopathology image analysis using deep learning. IEEE Access 2020;8:61687–710. https://doi.org/10.1109/ ACCESS.2020.2983186.
+
+\bibitem{ref10} [10] Bhatla N, Singhal S. Primary HPV screening for cervical cancer. Best Pract Res Clin Obstet Gynaecol 2020;65:98–108. https://doi.org/10.1016/j. bpobgyn.2020.02.008.
+
+\bibitem{ref11} [11] Duan Z, Xu C, Li Z, Feng B, Nie C. FMA-Net : fusion of multi-scale attention for grading cervical precancerous lesions. Mathematics 2024. https://doi.org/ 10.3390/math12070958.
+
+\bibitem{ref12} [12] Patil DB, Vishwanath TS. Integration of deep learning algorithms for precision cervical cancer analysis from colposcopic images. Intell Syst Appl Eng 2024;12: 539–45. Available online: https://ijisae.org/index.php/IJISAE/article/view/ 4158/2798. [Accessed 7 July 2025].
+
+\bibitem{ref13} [13] Assiri M, Issaoui I, Edris A, Mahmud A, Ibrahim SS. Computer aided cervical cancer diagnosis using Gazelle Optimization Algorithm with deep learning model. IEEE Access 2024;12. https://doi.org/10.1109/ACCESS.2024.3351883. no. December 2023.
+
+\bibitem{ref14} [14] Olumodeji AM, et al. Attitude to cervical cancer screening and human papillomavirus testing experience in self-sampled Nigerian women. Afr Health Sci 2024;24(1):127–34. https://doi.org/10.4314/ahs.v24i1.16.
+
+\bibitem{ref15} [15] Manhas J, Gupta RK, Roy PP. A review on automated cancer detection in medical images using machine learning and deep learning based computational techniques: challenges and opportunities. Netherlands: Springer; 2022. https:// doi.org/10.1007/s11831-021-09676-6. vol. 29, no. 5.
+
+\bibitem{ref16} [16] Zaki N, Qin W, Krishnan A. Graph-based methods for cervical cancer segmentation: advancements, limitations, and future directions. AI Open 2023;4 (June):42–55. https://doi.org/10.1016/j.aiopen.2023.08.006. 15
+
+\bibitem{ref17} [17] Pacal I. MaxCerVixT: a novel lightweight vision transformer-based Approach for precise cervical cancer detection. Knowledge-Based Syst 2024;289:111482. https://doi.org/10.1016/j.knosys.2024.111482. no. October 2023.[18] Khan A, Han S, Ilyas N, Lee Y, Lee B. CervixFormer : a multi-scale swin transformer-Based cervical pap-smear WSI classification framework. Comput Methods Program Biomed 2023;240. https://doi.org/10.1016/j. cmpb.2023.107718.
+
+\bibitem{ref18} [17] Pacal I. MaxCerVixT: a novel lightweight vision transformer-based Approach for precise cervical cancer detection. Knowledge-Based Syst 2024;289:111482. https://doi.org/10.1016/j.knosys.2024.111482. no. October 2023.
+
+\bibitem{ref19} [18] Khan A, Han S, Ilyas N, Lee Y, Lee B. CervixFormer : a multi-scale swin transformer-Based cervical pap-smear WSI classification framework. Comput Methods Program Biomed 2023;240. https://doi.org/10.1016/j. cmpb.2023.107718.
+
+\bibitem{ref20} [19] Diniz DN, et al. A hierarchical feature-based methodology to perform cervical cancer classification. Appl Sci 2021;11(9). https://doi.org/10.3390/ app11094091.
+
+\bibitem{ref21} [20] Wan T, Xu S, Sang C, Jin Y, Qin Z. Accurate segmentation of overlapping cells in cervical cytology with deep convolutional neural networks. Neurocomputing 2019;365:157–70. https://doi.org/10.1016/j.neucom.2019.06.086.
+
+\bibitem{ref22} [21] Youneszade N, Marjani M, Ray SK. A predictive model to detect cervical diseases using convolutional neural network algorithms and digital colposcopy images. IEEE Access 2023;11(May):59882–98. https://doi.org/10.1109/ ACCESS.2023.3285409.
+
+\bibitem{ref23} [22] Cai D, et al. HiCervix: an extensive hierarchical dataset and benchmark for cervical cytology classification. IEEE Trans Med Imaging 2024;43(12):4344–55. https://doi.org/10.1109/TMI.2024.3419697.
+
+\bibitem{ref24} [23] Wang X, et al. SAC-Net: enhancing Spatiotemporal Aggregation in cervical histological image classification via label-efficient weakly supervised learning. IEEE Trans Circuits Syst Video Technol 2024;34(8):6774–84. https://doi.org/ 10.1109/TCSVT.2023.3294938.
+
+\bibitem{ref25} [24] Song Y, Tan E, Jiang X, Member S, Cheng J, Ni D. Accurate cervical cell segmentation from overlapping clumps in pap smear images. IEEE Trans Med Imaging 2017;36(1):288–300. https://doi.org/10.1109/TMI.2016.2606380.
+
+\bibitem{ref26} [25] Garg P, et al. BBA - Reviews on Cancer Artificial intelligence and allied subsets in early detection and preclusion of gynecological cancers. BBA - Rev Cancer 2023; 1878(6):189026. https://doi.org/10.1016/j.bbcan.2023.189026.
+
+\bibitem{ref27} [26] Sahoo P, Saha S, Member S. Enhancing computer-aided cervical cancer detection using a novel fuzzy rank-based fusion. IEEE Access 2023;11(December): 145281–94. https://doi.org/10.1109/ACCESS.2023.3346764.
+
+\bibitem{ref28} [27] Mohammed BA, et al. Hybrid techniques for diagnosis with WSIs for early detection of cervical cancer based on fusion features. Appl Sci 2022. https://doi. org/10.3390/app12178836.
+
+\bibitem{ref29} [28] Alsalatie M, Alquran H, Mustafa WA, Yacob YM, Alayed AA. Analysis of cytology pap smear images based on ensemble deep learning approach. Diagnostics 2022; 12(11). https://doi.org/10.3390/diagnostics12112756.
+
+\bibitem{ref30} [29] Zhang Z, Han Y. Detection of ovarian tumors in obstetric Ultrasound imaging using logistic regression classifier with an advanced machine learning approach. IEEE Access 2020;8:44999–5008. https://doi.org/10.1109/ ACCESS.2020.2977962.
+
+\bibitem{ref31} [30] Chun J, et al. Automated screening of precancerous cervical cells through contrastive self-supervised learning. life 2024:1–14. https://doi.org/10.3390/ life14121565.
+
+\bibitem{ref32} [31] Stegmüller T, et al. Self-supervised learning-based cervical cytology for the triage of HPV-positive women in resource-limited settings and low-data regime. Comput Biol Med 2024;169(June 2023):107809. https://doi.org/10.1016/j. compbiomed.2023.107809.
+
+\bibitem{ref33} [32] Mosiichuk V, Sampaio A, Viana P, Oliveira T, Rosado L. Improving mobile-based cervical cytology screening : a deep learning nucleus-based approach for lesion detection. Appl Sci 2023:1–18. https://doi.org/10.3390/app13179850.
+
+\bibitem{ref34} [33] Zhou M, et al. Hierarchical pathology screening for cervical abnormality. Comput Med Imaging Graph 2021;89(February):101892. https://doi.org/10.1016/j. compmedimag.2021.101892.
+
+\bibitem{ref35} [34] Kawahara D, Yoshimura H, Murakami Y, Matsuura T. Usability of synthesized image using generative adversarial network for prediction model of recurrence after radiotherapy in locally advanced cervical cancer. Biomed Signal Process Control 2024;89:105762. https://doi.org/10.1016/j.bspc.2023.105762. no. October 2023.
+
+\bibitem{ref36} [35] Fan J, Liu J, Xie S, Zhou C, Wu Y. Cervical lesion image enhancement based on conditional entropy generative adversarial network framework. Methods 2023; 203(November 2021):523–32. https://doi.org/10.1016/j.ymeth.2021.11.004.
+
+\bibitem{ref37} [36] Yaman O, Tuncer T. Exemplar pyramid deep feature extraction based cervical cancer image classification model using pap-smear images. Biomed Signal Process Control 2021;73(December 2021):103428. https://doi.org/10.1016/j. bspc.2021.103428.
+
+\bibitem{ref38} [37] Riana D, Ramdhani Y, Prasetio RT, Hidayanto AN. Improving hierarchical decision approach for single image classification of pap smear. Int J Electr Comput Eng 2018;8(6):5415–24. https://doi.org/10.11591/ijece.v8i6.pp5415- 5424.
+
+\bibitem{ref39} [38] Singh AK, Ganapathysubramanian B, Sarkar S, Singh A. Deep learning for plant stress phenotyping : trends and future perspectives machine learning in plant science. Trends Plant Sci 2018;23(10):883–98. https://doi.org/10.1016/j. tplants.2018.07.004.
+
+\bibitem{ref40} [39] Palanisamy VS, Nagalingam T. Pap smear based cervical cancer detection using residual neural networks deep learning architecture. WILEY; 2021. p. 1–11. https://doi.org/10.1002/cpe.6608. no. January 2021.
+
+\bibitem{ref41} [40] Brenes D, et al. Multi-task network for automated analysis of high-resolution endomicroscopy images to detect cervical precancer and cancer. Comput Med Imaging Graph 2022;97(February). https://doi.org/10.1016/j. compmedimag.2022.102052.
+
+\bibitem{ref42} [41] Mazroa AAL, Ishak MK, Aljarbouh A, Mostafa SM. Improved bald eagle search optimization with deep learning-based cervical cancer detection and
+H. Mbelwa et al. Informatics in Medicine Unlocked 60 (2026) 101726 classification. IEEE Access 2023;11(December):135175–84. https://doi.org/ 10.1109/ACCESS.2023.3337032.
+
+\bibitem{ref43} [42] Zhang L, Lu L, Nogues I, Summers RM, Liu S, Yao J. DeepPap: deep convolutional networks for cervical cell classification. IEEE J Biomed Heal Informatics 2017;21 (6):1633–43. https://doi.org/10.1109/JBHI.2017.2705583.
+
+\bibitem{ref44} [43] Arya M, Mittal N, Singh G. Texture-based feature extraction of smear images for the detection of cervical cancer. IET Comput Vis 2018;12(8):1049–59. https:// doi.org/10.1049/iet-cvi.2018.5349.
+
+\bibitem{ref45} [44] Wang H, Jiang C, Bao K, Xu C. Recognition and clinical diagnosis of cervical cancer cells based on our improved lightweight deep network for pathological image. J Med Syst 2019;43(9). https://doi.org/10.1007/s10916-019-1426-y.
+
+\bibitem{ref46} [45] Ghoneim A, Muhammad G, Hossain MS. Cervical cancer classification using convolutional neural networks and extreme learning machines. Futur Gener Comput Syst 2019;102:643–9. https://doi.org/10.1016/j.future.2019.09.015.
+
+\bibitem{ref47} [46] Kudva V, Prasad K, Guruvare S. Hybrid transfer learning for classification of uterine cervix images for cervical cancer screening. Lect Notes Electr Eng 2019; 614:299–312. https://doi.org/10.1007/978-981-15-0626-0_25.
+
+\bibitem{ref48} [47] Martínez-M´as J, et al. Classifying Papanicolaou cervical smears through a cell merger approach by deep learning technique. Expert Syst Appl 2020;160. https:// doi.org/10.1016/j.eswa.2020.113707.
+
+\bibitem{ref49} [48] Li Y, Chen J, Xue P, Tang C, Chang J, Chu C. Computer-Aided cervical cancer diagnosis using time-lapsed colposcopic images. IEEE Trans Med Imaging 2020; 39(11):3403–15. https://doi.org/10.1109/TMI.2020.2994778.
+
+\bibitem{ref50} [49] Yue Z, et al. Automatic CIN grades prediction of sequential cervigram image using LSTM with Multistate CNN features. IEEE J Biomed Heal Informatics 2020;24(3): 844–54. https://doi.org/10.1109/JBHI.2019.2922682.
+
+\bibitem{ref51} [50] Saini SK, Bansal V, Kaur R, Juneja M. ColpoNet for automated cervical cancer screening using colposcopy images. Mach Vis Appl 2020;31(3):1–15. https://doi. org/10.1007/s00138-020-01063-8.
+
+\bibitem{ref52} [68] Garcia-gonzalez D, Garcia-silvente M, Aguirre E. A multiscale algorithm for nuclei extraction in pap smear images. Expert Syst Appl 2016;64:512–22. https://doi. org/10.1016/j.eswa.2016.08.015.
+
+\bibitem{ref53} [69] Liu J, Li L, Wang L. Acetowhite region segmentation in uterine cervix images using a registered ratio image. Comput Biol Med 2017;93:47–55. https://doi.org/ 10.1016/j.compbiomed.2017.12.009. no. August 2017.
+
+\bibitem{ref54} [70] Sornapudi S, et al. Deep learning Nuclei detection in digitized histology images by superpixels. J Pathol Inform 2018;9(1):5. https://doi.org/10.4103/jpi.jpi.
+
+\bibitem{ref55} [71] Ramasamy R. Detection and segmentation of cancer regions in cervical images using fuzzy logic and adaptive neuro fuzzy inference system classification method. WILEY; 2019. p. 412–20. https://doi.org/10.1002/ima.22386. no. October 2019.
+
+\bibitem{ref56}[72] Kurnianingsh, et al. Segmentation and classification of cervical cells using deep learning. IEEE Access 2019. https://doi.org/10.1109/access.2019.2936017.
+
+\bibitem{ref57}[73] Huang J, Yang G, Li B, He Y, Liang Y. Segmentation of cervical cell images based
+on generative adversarial networks. IEEE Access 2021;9:115415–28. https://doi. org/10.1109/ACCESS.2021.3104609.
+
+\bibitem{ref58}[74] Zhao Y, Fu C, Xu S, Cao L, Ma H. LFANet : lightweight feature attention network for abnormal cell segmentation in cervical cytology images. Comput Biol Med 2022;145:105500. https://doi.org/10.1016/j.compbiomed.2022.105500. no. November 2021.
+
+\bibitem{ref59}[75] Shiney TS, Rose RJ. Deep auto encoder based extreme learning System for automatic segmentation of cervical cells deep auto encoder based extreme learning System for automatic segmentation of cervical cells. IETE J Res 2023. https://doi.org/10.1080/03772063.2021.1958075.
+
+\bibitem{ref60}[76] Devi MA, Ezhilarasie R, Joseph KS, Kotecha K, Vairavasundaram S. An improved boykov ’ s graph cut-based segmentation technique for the efficient detection of cervical cancer. IEEE Access 2023;11(July). https://doi.org/10.1109/ ACCESS.2023.3295833.
+
+\bibitem{ref61}[51] Kumar BCSS. An optimized deep learning model using Mutation-based Atom
+
+\bibitem{ref62}[77] He Y, Liu L, Wang J, Zhao N, He H. Colposcopic image segmentation based on Search Optimization algorithm for cervical cancer detection. Soft Comput 2021; 25(24):15363–76. https://doi.org/10.1007/s00500-021-06138-w.
+
+\bibitem{ref63}[52] Shi J, Wang R, Zheng Y, Jiang Z, Zhang H, Yu L. Cervical cell classification with graph convolutional network. Comput Methods Programs Biomed 2021;198: 105807. https://doi.org/10.1016/j.cmpb.2020.105807.
+
+\bibitem{ref64}[53] Pirovano A, Almeida LG, Ladjal S, Bloch I, Berlemont S. Computer-aided diagnosis tool for cervical cancer screening with weakly supervised localization and detection of abnormalities using adaptable and explainable classifier. Med Image Anal 2021;73:102167. https://doi.org/10.1016/j.media.2021.102167.
+
+\bibitem{ref65} [54] Basak H, Kundu R, Chakraborty S, Das N. Cervical cytology classification using PCA and GWO enhanced deep features selection. SN Comput Sci 2021;2(5):1–17. https://doi.org/10.1007/s42979-021-00741-2.
+
+\bibitem{ref66} [55] Diniz DN, et al. A deep learning ensemble method to assist cytopathologists in pap test image classification. J Imaging 2021;7(7). https://doi.org/10.3390/ jimaging7070111.
+
+\bibitem{ref67} [56] Pal A, et al. Deep multiple-instance learning for abnormal cell detection in cervical histopathology images. Comput Biol Med 2021;138(May):104890. https://doi.org/10.1016/j.compbiomed.2021.104890.
+
+\bibitem{ref68} [57] Albuquerque T, Cruz R, Cardoso JS. Ordinal losses for classification of cervical cancer risk. PeerJ Comput Sci 2021;7:1–21. https://doi.org/10.7717/peerj- cs.457.
+
+\bibitem{ref69} [58] Pramanik R, Biswas M, Sen S, de Souza Júnior LA, Papa JP, Sarkar R. A fuzzy distance-based ensemble of deep models for cervical cancer detection. Comput Methods Programs Biomed 2022;219:106776. https://doi.org/10.1016/j. cmpb.2022.106776.
+
+\bibitem{ref70} [59] Maurya R, Nath Pandey N, Kishore Dutta M. VisionCervix: papanicolaou cervical smears classification using novel CNN-Vision ensemble approach. Biomed Signal Process Control 2022;79(P2):104156. https://doi.org/10.1016/j. bspc.2022.104156. feature refinement and attention. IEEE Access 2024;12(February):40856–70. https://doi.org/10.1109/ACCESS.2024.3378097.
+
+\bibitem{ref71} [78] Haridas S, Jayamalar T. Novel segmentation based cervical cancer detection using deep convolutional based neural network with relu. J Theor Appl Inf Technol 2024;102(5). Available online: https://www.jatit.org/volumes/Vol10 2No5/8Vol102No5.pdf. [Accessed 5 June 2025].
+
+\bibitem{ref72} [79] Zao H, Jia D, Zhang C, Li Z, Wu N. A two-stage approach solo_GAN for overlapping cervical cell segmentation based on single-cell identification and boundary generation. 2024. https://doi.org/10.1007/s10489-024-05378-1.
+
+\bibitem{ref73} [80] Lu W, Tu H. Enhancing cervical cell detection through weakly supervised learning with local distillation mechanism. IEEE Access 2024;12(May). https://doi.org/ 10.1109/ACCESS.2024.3407066.
+
+\bibitem{ref74} [81] Bai B, Du Y, Liu P, Sun P, Li P, Lv Y. Detection of cervical lesion region from colposcopic images based on feature reselection. Biomed Signal Process Control 2020;57:101785. https://doi.org/10.1016/j.bspc.2019.101785.
+
+\bibitem{ref75} [82] Abd-alhalem SM, Salem H, El-shafai W, Altameem T, Singh R, Hassan TM. Cervical cancer classification based on a bilinear convolutional neural network approach and random projection. Eng Appl Artif Intell 2024;127(PA):107261. https://doi.org/10.1016/j.engappai.2023.107261.
+
+\bibitem{ref76} [83] Jia D, He Z, Zhang C. Detection of cervical cancer cells in complex situation based on improved YOLOv3 network. Multimed Tools Appl 2022;(3):8939–61. https:// doi.org/10.1007/s11042-022-11954-9.
+
+\bibitem{ref77} [84] Elakkiya R, Subramaniyaswamy V, Vijayakumar V, Mahanti A. Cervical cancer diagnostics healthcare System using hybrid object detection adversarial networks. IEEE J Biomed Heal Informatics 2022;26(4):1464–71. https://doi.org/10.1109/ JBHI.2021.3094311.
+
+\bibitem{ref78} [85] Jia D, Zhou J, Zhang C. Detection of cervical cells based on improved SSD network. Multimed Tools Appl 2021;(3):13371–87. https://doi.org/10.1007/ s11042-021-11015-7.
+
+\bibitem{ref79} [60] Benhari M, Hossseini R. Intelligent Systems with Applications An improved Fuzzy
+
+\bibitem{ref80} [86] Cao L, et al. A novel attention-guided convolutional network for the detection of Deep Learning (IFDL) model for managing uncertainty in classification of pap- smear cell images. Intell Syst with Appl 2022;16(July):200133. https://doi.org/ 10.1016/j.iswa.2022.200133. abnormal cervical cells in cervical cancer screening. Med Image Anal 2021;73: 102197. https://doi.org/10.1016/j.media.2021.102197.
+
+\bibitem{ref81} [87] Ma D, Liu J, Li J, Zhou Y. Cervical cancer detection in cervical smear images using
+
+\bibitem{ref82} [61] Fang M, Lei X, Liao BO. A deep neural network for cervical cell classification based on cytology images. IEEE Access 2022;10(December):130968–80. https:// doi.org/10.1109/ACCESS.2022.3230280.
+
+\bibitem{ref83} [62] Fang S, Yang J, Wang M, Liu C, Liu S. An improved image classification method for cervical precancerous lesions based on ShuffleNet. Comput Intell Neurosci 2022;2022. https://doi.org/10.1155/2022/9675628.
+
+\bibitem{ref84} [63] Devi NL, Thirumurugan P. Cervical cancer classification from pap smear images using modified fuzzy C means , PCA , and KNN. IETE J Res 2022. https://doi.org/ 10.1080/03772063.2021.1997353. deep pyramid inference with refinement and spatial-aware booster. IET Image Process; 2021. https://doi.org/10.1049/iet-ipr.2020.0688.
+
+\bibitem{ref85} [88] Yan L, et al. HLDnet : novel deep learning based Artificial Intelligence tool fuses acetic acid and Lugol ’ s iodine cervicograms for accurate pre-cancer screening. Biomed Signal Process Control 2021;71(PA):103163. https://doi.org/10.1016/j. bspc.2021.103163.
+
+\bibitem{ref86} [89] Ontor ZH, et al. Early-Stage cervical cancerous cell detection from cervix images using. Comput Mater Contin 2022. https://doi.org/10.32604/cmc.2023.032794.
+
+\bibitem{ref87} [90] Xu L, Cai F, Fu Y, Liu Q. Cervical cell classification with deep-learning algorithms.
+
+\bibitem{ref88} [64] Natarajan T, Devan L, Seethapathy RP, Balakrishnan SK. A customized ConvNeXt-
+2023. https://doi.org/10.1007/s11517-022-02745-3. XL network with fusion of deep and.pdf. Int J Imaging Syst Technology Wiley, Tamil Nadu; 2023. p. 1–17. https://doi.org/10.1002/ima.23036.
+
+\bibitem{ref89} [65] Agustiansyah P, Nurmaini S, Nuranna L, Irfannuddin I, Sanif R. Automated precancerous lesion screening using an instance segmentation technique for improving accuracy. Sensors 2022:1–16. https://doi.org/10.3390/s22155489.
+
+\bibitem{ref90} 2023. https://doi.org/10.1007/s11517-022-02745-3. XL network with fusion of deep and.pdf. Int J Imaging Syst Technology Wiley, Tamil Nadu; 2023. p. 1–17. https://doi.org/10.1002/ima.23036.
+
+\bibitem{ref91} [66] Baoyan M, Zhang J, Cao F, He Y. Macd R-CNN : an abnormal cell nucleus detection method. IEEE Access 2020;8. https://doi.org/10.1109/ ACCESS.2020.3020123.
+
+\bibitem{ref92} [67] Nazir N, Sarwar A, Saini BS, Shams R. A Robust deep learning approach for accurate segmentation of cytoplasm and Nucleus in noisy pap smear images. Computation 2023. https://doi.org/10.3390/computation11100195.
+
+\bibitem{ref93} [91] Jiang X, Wang S, Zhang Y. Vision transformer promotes cancer diagnosis: a comprehensive review. Expert Syst Appl 2024;252(PA):124113. https://doi.org/ 10.1016/j.eswa.2024.124113.
+
+\bibitem{ref94} [92] Wang P, Yang Q, He Z, Yuan Y. Vision transformers in multi-modal brain tumor MRI segmentation: a review. Meta-Radiology 2023;1(1):100004. https://doi.org/ 10.1016/j.metrad.2023.100004.
+
+\bibitem{ref95} [93] AlMohimeed A, Shehata M, El-Rashidy N, Mostafa S, Samy Talaat A, Saleh H. ViT- PSO-SVM: cervical cancer predication based on integrating vision transformer with particle swarm optimization and support vector machine. Bioengineering 2024;11(7):1–21. https://doi.org/10.3390/bioengineering11070729.
+
+\bibitem{ref96} [94] Hemajothi S, Ravi VR, Girinandanaa G, Joycerobega PD, Moncia K. Transformative advances in cervical cancer diagnosis leveraging colposcopy imaging with ViT. In: 2024 Int. Conf. Recent Adv. Electr. Electron. Ubiquitous 16
+
+\bibitem{ref97} H. Mbelwa et al. Informatics in Medicine Unlocked 60 (2026) 101726 Commun. Comput. Intell. RAEEUCCI 2024; 2024. https://doi.org/10.1109/ RAEEUCCI61380.2024.10547840.
+
+\bibitem{ref98} [95] Hong Z, Xiong J, Yang H, Mo YK. Lightweight low-rank adaptation vision transformer framework for cervical cancer detection and cervix type classification. Bioengineering 2024;11(5). https://doi.org/10.3390/ bioengineering11050468.
+
+\bibitem{ref99} [96] Zhu S, Lin L, Liu Q, Liu J, Song Y, Xu Q. Integrating a deep neural network and Transformer architecture for the automatic segmentation and survival prediction in cervical cancer. Quant Imaging Med Surg 2024;14(8):5408–19. https://doi. org/10.21037/qims-24-560.
+
+\bibitem{ref100} [120] Li J, Li D, Savarese S, Hoi S. BLIP-2: bootstrapping language-image pretraining with frozen image encoders and large Language models. 2023. https://doi.org/ 10.5555/3618408.3619222.
+
+\bibitem{ref101} [121] Zhu D, Chen J, Shen X, Li X, Elhoseiny M. In: Gpt-4: enhancing vision-language understanding with advanced large Language models; 2022. p. 1–15. 2023, Available online: https://arxiv.org/pdf/2304.10592.pdf. [Accessed 6 July 2024].
+
+\bibitem{ref102} [122] Sun Y, Zhu C, Zheng S, Zhang Y, Li H, Yang L. Context-Aware text-assisted multimodal framework for cervical cytology cell diagnosis and chatting. 2024 IEEE Int Conf Multimed Expo 2024:1–6. https://doi.org/10.1109/ ICME57554.2024.10688120.
+
+\bibitem{ref103} [97] Zhao C, Shuai R, Ma L, Liu W, Wu M. Improving cervical cancer classification
+
+\bibitem{ref104} [123] Kurita Y, et al. Enhancing cervical cancer cytology screening via artificial with imbalanced datasets combining taming transformers with T2T-ViT 2022;81 (17). https://doi.org/10.1007/s11042-022-12670-0. intelligence innovation. Sci Rep 2024:1–12. https://doi.org/10.1038/s41598- 024-70670-6.
+
+\bibitem{ref105} [98] Abinaya and Sivakumar. A deep learning-based approach for cervical cancer
+
+\bibitem{ref106} [124] Thawkar O, et al. XrayGPT: chest radiographs summarization using medical classification using 3D CNN and vision transformer. J Imaging Informatics Med 2024;37(1):280–96. https://doi.org/10.1007/s10278-023-00911-z.
+
+\bibitem{ref107} [99] Fan Z, et al. CAM-VT: a weakly supervised cervical cancer nest image vision-language models [Online]. Available: http://arxiv.org/abs/2306.07971; 2023.
+
+\bibitem{ref108} [125] Bazi Y, Mahmoud M, Rahhal A, Bashmal L, Zuair M. Vision – language model for identification approach using conjugated attention mechanism and visual transformer. Comput Biol Med 2023;162(February):107070. https://doi.org/ 10.1016/j.compbiomed.2023.107070.
+
+\bibitem{ref109} [100] Emara HM, El-Shafai W, Soliman NF, Algarni AD, Alkanhel R, Abd El-Samie FE. Cervical cancer detection: a comprehensive evaluation of CNN models, vision transformer approaches, and fusion strategies. IEEE Access 2024:1. https://doi. org/10.1109/ACCESS.2024.3473741.
+
+\bibitem{ref110} [101] Sholik M, Fatichah C, Amaliah B. Deep feature extraction of pap smear images based on convolutional neural network and vision transformer for cervical cancer classification. Proc 2024 IEEE Int Conf Ind 4 0 Artif Intell Commun Technol IAICT 2024:290–6. https://doi.org/10.1109/IAICT62357.2024.10617492. 2024.
+
+\bibitem{ref111} [102] Khowaja A, Zou B, Kui X. Enhancing cervical cancer diagnosis: integrated attention-transformer system with weakly supervised learning. Image Vis Comput 2024;149:105193. https://doi.org/10.1016/j.imavis.2024.105193. no. December 2023.
+
+\bibitem{ref112} [103] Jose L, Liu S, Russo C, Nadort A, Di Ieva A. Generative adversarial networks in digital pathology and histopathological image processing : a review. J Pathol Inform 2021;12(1):43. https://doi.org/10.4103/jpi.jpi.
+
+\bibitem{ref113} [104] Osuala R, et al. Data synthesis and adversarial networks : a review and meta- analysis in cancer imaging. Med Image Anal 2023;84(November 2022):102704. https://doi.org/10.1016/j.media.2022.102704. visual question answering in medical imagery. 2023
+
+\bibitem{ref114} [129] Dellino M, et al. Artificial intelligence in cervical cancer screening : opportunities and challenges, AI; 2024. p. 2984–3000. https://doi.org/10.3390/ai5040144.
+
+\bibitem{ref115} [130] Narasimhamurthy M, Kafle SU. Cervical cancer in Nepal: current screening strategies and challenges. Front Public Heal 2022;10(2). https://doi.org/ 10.3389/fpubh.2022.980899.
+
+\bibitem{ref116} [131] Sambyal D, Sarwar A. Recent developments in cervical cancer diagnosis using deep learning on whole slide images: an overview of models, techniques, challenges and future directions. Micron 2023;173(April):103520. https://doi. org/10.1016/j.micron.2023.103520.
+
+\bibitem{ref117} [105] Ganesan P, et al. Performance evaluation of a generative adversarial network for
+
+\bibitem{ref118} [132] Fuzzell LN, Perkins RB, Christy SM, Lake PW, Vadaparampil ST. Cervical cancer deblurring mobile-phone cervical images. 2019 41st annu. Int. Conf. IEEE Eng. Med. Biol. Soc.. 2019. p. 4487–90.
+
+\bibitem{ref119} [106] Sevukamoorthy L, Chintapalli GS, Pander VK. Machine learning and generative adversarial networks for accurate and timely cancer detection in Smart Healthcare systems. 2024 15th Int Conf Comput Commun Netw Technol 2024: 1–5. https://doi.org/10.1109/ICCCNT61001.2024.10724781.
+
+\bibitem{ref120} [107] Ledig C, et al. Photo-Realistic single image super-resolution using a generative adversarial network. 2017. p. 4681–90. https://doi.org/10.48550/ arXiv.1609.04802.
+
+\bibitem{ref121} [108] Xiong Y, et al. Improved SRGAN for remote sensing image super-resolution across locations and sensors. Remote Sens 2020:1–21. https://doi.org/10.3390/ rs12081263.
+
+\bibitem{ref122} [109] Qiao Y, Zhang W, Liu Y. RankSRGAN : generative adversarial networks with ranker for image super-resolution. 2018. p. 3096–105. https://doi.org/10.1109/ ICCV.2019.00319.
+
+\bibitem{ref123} [110] Shah PN, Abdul R, Khan H. A review paper on innovative deep learning and machine learning algorithms for improved cervical cancer identification. 2024 4th Int Conf Sustain Expert Syst 2024:1095–100. https://doi.org/10.1109/ ICSES63445.2024.10763323.
+
+\bibitem{ref124} [111] He Z, Dongyao J, Zhang C, Li Z, Wu N. A two-stage approach solo_GAN for overlapping cervical cell segmentation based on single-cell identification and boundary generation. Springer; 2024. p. 4621–45. https://doi.org/10.1007/ s10489-024-05378-1.
+
+\bibitem{ref125} [112] Ali M, Ali M. DCGAN for synthetic data augmentation of cervical cancer for improved cervical cancer classification. IEEE Int Students’ Conf Electr Electron Comput Sci 2024:1–7. https://doi.org/10.1109/SCEECS61402.2024.10482312. 2024.
+
+\bibitem{ref126} [113] Yu S, et al. Generative adversarial network based data augmentation to improve cervical cell classification model. Math Biosci Eng 2021;18(February):1740–52. https://doi.org/10.3934/mbe.2021090.
+
+\bibitem{ref127} [114] Bishnoi AK, Gupta R. Performance comparison of generative adversarial networks and neural networks on cancers detection. Int Conf Optim Comput Wirel Commun 2024:1–6. https://doi.org/10.1109/ICOCWC60930.2024.10470909. 2024.
+
+\bibitem{ref128} [115] Zhang J, Member GS, Huang J, Member GS. Vision-Language models for Vision Tasks : a Survey. IEEE Trans Pattern Anal Mach Intell 2024;46(8):5625–44. https://doi.org/10.1109/TPAMI.2024.3369699.
+
+\bibitem{ref129} [116] Zhou K, Yang J, Change C, Ziwei L. Learning to prompt for vision-language models. Int J Comput Vis 2022;130(9):2337–48. https://doi.org/10.1007/ s11263-022-01653-1.
+
+\bibitem{ref130} [117] Jairo Y, Bautista P, Theran C, Al´o R, Lima V. Health disparities through generative AI models : a comparison Study using a domain, vol. 1. Springer; 2023. p. 220–32. https://doi.org/10.1007/978-3-031-47454-5.
+
+\bibitem{ref131} [118] Chen L, et al. Are we on the right way for evaluating large vision-language models ?. 2024. https://doi.org/10.48550/arXiv.2403.20330.
+
+\bibitem{ref132} [119] Moor M, et al. Med-Flamingo: a multimodal medical few-shot learner. Proc Mach Learn Res 2023;225(2021):353–67. https://doi.org/10.5555/3462284.346232. screening in the United States: challenges and potential solutions for underscreened groups. Prev Med 2021;144(June 2020):106400. https://doi.org/ 10.1016/j.ypmed.2020.106400.
+
+\bibitem{ref133} [133] Drummond JL, Were MC, Wools-kaloustian SAK. Cervical cancer data and data systems in limited- - resource settings : challenges and opportunities. Int J Gynecol Obs 2017;138:33–40. https://doi.org/10.1002/ijgo.12192.
+
+\bibitem{ref134} [134] Liang Y, Tang Z, Yan M, Chen J, Liu Q, Xiang Y. Neurocomputing Comparison detector for cervical cell/clumps detection in the limited data scenario. Neurocomputing 2021;437:195–205. https://doi.org/10.1016/j. neucom.2021.01.006.
+
+\bibitem{ref135} [135] Mathivanan SK, Francis D, Srinivasan S, Khatavkar V, Karthikeyan P, Shah MA. Enhancing cervical cancer detection and robust classification through a fusion of deep learning models. Sci Rep 2024:1–14. https://doi.org/10.1038/s41598-024- 61063-w.
+
+\bibitem{ref136} [136] Zaki N, Qin W, Krishnan A. Graph-based methods for cervical cancer segmentation : advancements , limitations , and future directions. AI Open 2023;4 (August):42–55. https://doi.org/10.1016/j.aiopen.2023.08.006.
+
+\bibitem{ref137} [137] Xue P, Ng MTA, Qiao Y. The challenges of colposcopy for cervical cancer screening in LMICs and solutions by artificial intelligence. BMC Med 2020;18(1): 1–7. https://doi.org/10.1186/s12916-020-01613-x.
+
+\bibitem{ref138} [138] Jagadeesh S, Ravi kumar K, Narenda Kumar B, Sivanagireddy K. Advancing Cervical Cancer Diagnosis through Deep Learning : architectures , challenges , and Future directions. Front Heal Informatics 2024;13(3):10998–1013.
+
+\bibitem{ref139} [139] Aina OE, Adeshina SA, Aibinu AM. Deep learning for image-based cervical cancer detection and diagnosis - a survey. 2019 15th Int Conf Electron Comput Comput ICECCO 2019;(Icecco):1–7. https://doi.org/10.1109/ ICECCO48375.2019.9043220. 2019.
+
+\bibitem{ref140} [140] Shakil R, Islam S, Akter B. A precise machine learning model : detecting cervical cancer using feature selection and explainable AI. J Pathol Inform 2024;15(July): 100398. https://doi.org/10.1016/j.jpi.2024.100398.
+
+\bibitem{ref141} [141] Prusty S, Patnaik S, Dash SK. Predicting cervical cancer risk probabilities using advanced H20 AutoML and local interpretable model-agnostic explanation techniques. PeerJ Comput Sci 2024. https://doi.org/10.7717/peerj-cs.1916.
+
+\bibitem{ref142} [142] Ando Y, Cho J, Park NJ, Ko S. Toward interpretable cell image representation and abnormality scoring for cervical cancer screening using pap smears. Bioengineering 2024:1–16. https://doi.org/10.3390/bioengineering11060567.
+
+\bibitem{ref143} [143] Wagholikar KB, Liu H, Chaudhry R. Improving the accuracy of a clinical decision support System for cervical cancer screening and surveillance. Appl Clin Inform 2018:62–71. https://doi.org/10.1055/s-0037-1617451.
+
+\bibitem{ref144} [144] Zhao S, et al. Cervical cancer burden, status of implementation and challenges of cervical cancer screening in Association of Southeast Asian Nations (ASEAN) countries. Cancer Lett 2022;525:22–32. https://doi.org/10.1016/j. canlet.2021.10.036. no. August 2021.
+
+\bibitem{ref145} [145] Matko G, Lorencin A, Andelic N, Lorencin I. Cervical cancer diagnostics using machine learning algorithms and class balancing techniques. Appl Sci 2023:1–22. https://doi.org/10.3390/app13021061. 17
+H. Mbelwa et al. Informatics in Medicine Unlocked 60 (2026) 101726
+
+\bibitem{ref146} [146] Muraru M, Simo Z, Iantovics LB. Cervical cancer prediction based on imbalanced data using machine learning algorithms with a variety of sampling methods. Appl Sci 2024:1–22. https://doi.org/10.3390/app142210085.
+
+\bibitem{ref147} [147] Abdoh SF, Rizka MABO, Maghraby FA. Cervical cancer diagnosis using random Forest classifier with SMOTE and feature reduction techniques. IEEE Access 2018; 6:59475–85. https://doi.org/10.1109/ACCESS.2018.2874063.
+
+\bibitem{ref148} [148] Munshi RM. Novel ensemble learning approach with SVM- imputed ADASYN features for enhanced cervical cancer prediction. PLoS Med 2024:1–20. https:// doi.org/10.1371/journal.pone.0296107.
+
+\bibitem{ref149} [149] Cherry A, Hamawy L, Hage-diab A. Exploring data imbalance challenges in cervical cancer detection using advanced deep learning models. 2024 Int Conf Smart Syst Power Manag 2024:95–101. https://doi.org/10.1109/ IC2SPM62723.2024.10841356.
+
+\bibitem{ref150} [162] Liu L, Liu J, Su Q, Chu Y, Xia H, Xu R. Performance of artificial intelligence for diagnosing cervical intraepithelial neoplasia and cervical cancer: a systematic review and meta-analysis. eClinicalMedicine 2025;80:102992. https://doi.org/ 10.1016/j.eclinm.2024.102992.
+
+\bibitem{ref151} [163] Bai J, et al. In: Qwen-VL: a versatile vision-language model for understanding, localization, text reading, and beyond; 2023. p. 1–24 [Online]. Available: htt p://arxiv.org/abs/2308.12966.
+
+\bibitem{ref152} [164] Ge Y, et al. Deep learning-enabled integration of histology and transcriptomics for tissue spatial profile analysis. Research 2025;8. https://doi.org/10.34133/ research.0568.
+
+\bibitem{ref153} [165] Ji Z, et al. Counterfactual bidirectional Co-Attention transformer for integrative histology-genomic cancer risk stratification. IEEE J Biomed Heal Informatics 2025;29(8):5862–74. https://doi.org/10.1109/JBHI.2025.3548048.
+
+\bibitem{ref154} [150] Tian Y, Xu Z, Ma Y, Ding W, Wang R, Gao Z. Survey on deep learning in
+
+\bibitem{ref155} [166] Nhan T, Upadhya J, Poudel S, Wagle S. Scalable multimodal machine learning for multimodal medical imaging for cancer detection. Neural Comput Appl 2023;4. https://doi.org/10.1007/s00521-023-09214-4.
+
+\bibitem{ref156} [151] Petersen Z, et al. Barriers to uptake of cervical cancer screening services in low - and - middle - income countries : a systematic review. BMC Womens Health 2022. https://doi.org/10.1186/s12905-022-02043-y.
+
+\bibitem{ref157} [152] Alshammari AH, Ishii H, Hirotsu T. Bridging the gap in cervical cancer screening for underserved communities : MCED and the promise of future technologies. Front Oncol 2024:1–10. https://doi.org/10.3389/fonc.2024.1407008. no. July.
+
+\bibitem{ref158} [153] Xue P, et al. Deep learning enabled liquid-based cytology model for cervical precancer and cancer detection. Nat Commun 2025;16(1). https://doi.org/ 10.1038/s41467-025-58883-3.
+
+\bibitem{ref159} [154] Gnanavel N, Inparaj P, Sritharan N, Meedeniya D, Yogarajah P. Interpretable cervical cell classification: a comparative analysis. Icarc 2024 - 4th int. Conf. Adv. Res. Comput. Smart innov. Trends next gener. Comput. Technol.. 2024. p. 7–12. https://doi.org/10.1109/ICARC61713.2024.10499737.
+
+\bibitem{ref160} [155] Sritharan N, Gnanavel N, Inparaj P, Meedeniya D, Yogarajah P. EnsembleCAM: unified visualization for explainable cervical cancer identification. Proc - Int Res Conf Smart Comput Syst Eng SCSE 2024;2024. https://doi.org/10.1109/ SCSE61872.2024.10550859.
+
+\bibitem{ref161} [156] Wang X, et al. A pathology foundation model for cancer diagnosis and prognosis prediction. Nature 2024;634(8035):970–8. https://doi.org/10.1038/s41586-024- 07894-z.
+
+\bibitem{ref162} [157] Xu H, et al. A whole-slide foundation model for digital pathology from real-world data. Nature 2024;630(8015):181–8. https://doi.org/10.1038/s41586-024- 07441-w.
+
+\bibitem{ref163} [158] Tang HP, et al. Cervical cytology screening facilitated by an artificial intelligence microscope: a preliminary study. Cancer Cytopathol 2021;129(9):693–700. https://doi.org/10.1002/cncy.22425.
+
+\bibitem{ref164} [159] Zhanghao K, et al. Fast segmentation and multiplexing imaging of organelles in live cells. Nat Commun 2025;16(1):1–14. https://doi.org/10.1038/s41467-025- 57877-5.
+
+\bibitem{ref165}[160] Huang S, Ge Y, Liu D, Hong M, Zhao J, Loui AC. Rethinking copy-paste for consistency learning in medical image segmentation. IEEE Trans Image Process 2025;34:1060–74. https://doi.org/10.1109/TIP.2025.3536208.
+
+\bibitem{ref166}[161] Niu S, Zhang L, Wang L, Zhang X, Liu E. Hybrid feature fusion in cervical cancer cytology: a novel dual-module approach framework for lesion detection and classification using radiomics, deep learning, and reproducibility. Front Oncol 2025;15(August):1–24. https://doi.org/10.3389/fonc.2025.1595980. cervical cancer detection. In: 2024 IEEE world AI IoT congr; 2024. p. 502–10. https://doi.org/10.1109/AIIoT61789.2024.10578984.
+
+\bibitem{ref167}[167] Sritharan N, Gnanavel N, Inparaj P, Meedeniya D, Yogarajah P. Explainable artificial intelligence driven segmentation for cervical cancer screening. IEEE Access 2025;13(April):71306–22. https://doi.org/10.1109/ ACCESS.2025.3561178.
+
+\bibitem{ref168}[168] Patre P, Verma D. Deep dive into deep learning methods for cervical cancer detection and classification. Reports Pract Oncol Rdiotherapy 2025;30(3): 396–416. https://doi.org/10.5603/rpor.106148.
+
+\bibitem{ref169}[169] Zhao S, He Y, Qin J, Wang Z. A semi-supervised deep learning method for cervical cell classification. Anal Cell Pathol 2022. https://doi.org/10.1155/2022/ 4376178.
+
+\bibitem{ref170}[170] Angara S, Guo P, Xue Z, Antani S. Semi-Supervised learning for cervical precancer detection. CBMS 2021:202–6. https://doi.org/10.1109/CBMS52027.2021.00072.
+
+\bibitem{ref171}[171] Takezoe R, Liu X, Mao S, Chen MT. Deep active learning for computer vision : past and future. Trans Signal Inf Process August 2022, 2023. https://doi.org/10.1561/ 116.00000057.
+
+\bibitem{ref172}[172] Wu M, Li C, Yao Z. Deep Active Learning for Computer Vision Tasks : methodologies , Applications , and Challenges. Appl Sci 2022. https://doi.org/ 10.3390/app12168103.
+
+\bibitem{ref173}[173] Pirovano A, Almeida LG, Ladjal S, Bloch I. Computer-aided diagnosis tool for cervical cancer screening with weakly supervised localization and detection of abnormalities using adaptable and explainable classifier. Med Image Anal 2021; 73:102167. https://doi.org/10.1016/j.media.2021.102167.
+
+\bibitem{ref174} [174] Khowaja A, Zou B, Kui X. Enhancing cervical cancer diagnosis : integrated attention-transformer system with weakly supervised learning. Image Vis Comput 2024;149:105193. https://doi.org/10.1016/j.imavis.2024.105193. no. December 2023.
+
+\bibitem{ref175} [175] Shehnaz N, Nazrul M, Rumaisa R, Hasan R, Imtiaz N, Sarker IH. A federated learning aided system for classifying cervical cancer using PAP-SMEAR images. Informatics Med Unlocked 2024;47(April):101496. https://doi.org/10.1016/j. imu.2024.101496.
+
+\bibitem{ref176} [176] Nasir MU, Khalil OK, Ateeq K, Almogadwy BS, Khan MA, Adnan KM. Cervical cancer prediction empowered with federated machine learning. Comput Mater Contin 2024;(April). https://doi.org/10.32604/cmc.2024.047874.
+
+\bibitem{ref177} [177] Qi P, Chiaro D, Guzzo A, Ianni M, Fortino G, Piccialli F. Model aggregation techniques in federated learning : a comprehensive survey. Futur Gener Comput Syst 2024;150:272–94. https://doi.org/10.1016/j.future.2023.09.008. 18
+\end{thebibliography}
+\end{document}
